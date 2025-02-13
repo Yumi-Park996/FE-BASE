@@ -1,0 +1,167 @@
+/* General Styles */
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f0e1; /* Soft background */
+  color: #333;
+  margin: 0; /* Remove default body margin */
+}
+
+.container {
+  max-width: 1200px; /* Limit container width for larger screens */
+}
+
+h1,
+h2,
+h5 {
+  color: #1e3a8a;
+}
+
+/* Navigation Bar */
+.navbar {
+  background-color: #fff !important; /* Override Bootstrap default */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+  font-weight: bold;
+  color: #1e3a8a;
+}
+
+.nav-link {
+  color: #333;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #1e3a8a;
+}
+
+.btn-dark {
+  background-color: #1e3a8a !important;
+  border-color: #1e3a8a !important;
+}
+
+/* Hero Section */
+.hero {
+  background: #f8f9fa;
+  padding: 100px 0; /* Increased padding */
+  text-align: center;
+  background-image: url("asset/hero-image.jpg"); /* Placeholder image */
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  position: relative;
+}
+
+/* Overlay for hero text */
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+  z-index: 1;
+}
+
+.hero > .container {
+  position: relative; /* Ensure container content is above overlay */
+  z-index: 2;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+.hero p {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.btn-primary {
+  background-color: #f57c00; /* Warm primary color */
+  border-color: #f57c00;
+  padding: 10px 20px;
+  font-size: 1.1rem;
+  border-radius: 25px; /* Rounded button */
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #e65100;
+  border-color: #e65100;
+}
+
+/* Features Section */
+.features .card {
+  border: none;
+  border-radius: 15px; /* Rounded cards */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 20px; /* Add some spacing between cards */
+}
+
+.features .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.features h5 {
+  color: #1e3a8a;
+}
+
+/* Success Stories Section */
+.success-stories img {
+  width: 100%;
+  height: 200px; /* Fixed height for consistent look */
+  object-fit: cover; /* Ensure images cover the space */
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+.success-stories h5 {
+  color: #1e3a8a;
+}
+
+/* Quick Search Section */
+.input-group {
+  border-radius: 25px; /* Rounded input field */
+  overflow: hidden; /* Ensure button corners are rounded */
+}
+
+/* Footer */
+.footer {
+  background-color: #fff;
+  padding: 30px 0;
+  text-align: center;
+  color: #666;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); /* Shadow at the top */
+}
+
+.footer p {
+  margin-bottom: 0;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
+
+  .input-group {
+    width: 80% !important; /* Wider input on smaller screens */
+  }
+}
+
+@media (max-width: 576px) {
+  .hero {
+    padding: 60px 0;
+  }
+}
