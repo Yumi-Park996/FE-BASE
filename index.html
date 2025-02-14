@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="./script.js" defer></script>
     <!-- favicon -->
     <link
       rel="icon"
@@ -32,6 +33,7 @@
       content="https://github.com/user-attachments/assets/42edc0f5-5e02-4709-97c5-3009ed6cdeb2"
     />
     <link rel="stylesheet" href="./style.css" />
+
     <!-- Bootstrap CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
@@ -42,36 +44,15 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
+
     <title>PETTY | 반려동물과 함께 떠나는 완벽한 여행</title>
 
     <link rel="stylesheet" href="style.css" />
   </head>
+  <!-- ====== body ======= -->
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
-      <div class="container">
-        <a class="navbar-brand fw-bold text-primary">
-          <img class="img-fluid nav-logo-img" src="./asset/logo-b.png" />
-        </a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item"><a class="nav-link" href="#">분석하기</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">추천받기</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">커뮤니티</a></li>
-            <li class="nav-item">
-              <a class="btn btn-dark" href="#">Sign In</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+    <!-- nav bar - js -->
+    <div id="navbar"></div>
 
     <!-- 캐러셀 섹션 -->
     <section class="carousel-container mt-4">
@@ -137,33 +118,54 @@
         </button>
       </div>
     </section>
-    <!-- Hero Section -->
     <!-- Features Section -->
     <section class="container text-center my-5">
       <div class="row features">
-        <div class="col-md-4 col-12 mb-4">
-          <div class="card p-3">
-            <h5>AI Chatbot</h5>
-            <p>Get tailored recommendations for your furry friend.</p>
-          </div>
+        <div class="card-header">
+          <h2>PETTY만의 서비스</h2>
+          <h5>PETTY가 제공하는 우리 아이를 위한 서비스를 체험해 보세요🐶</h5>
         </div>
+
         <div class="col-md-4 col-12 mb-4">
-          <div class="card p-3">
-            <h5>Smart Search</h5>
-            <p>Find pet-friendly hotels, restaurants, and attractions.</p>
-          </div>
+          <a href="./vision.html">
+            <div class="card">
+              <img src="./asset/card2.jpg" class="img-fluid" alt="사진 분석" />
+              <div class="card-body">
+                <h5>사진 분석</h5>
+                <p>AI가 사진을 통해 정보를 분석합니다</p>
+              </div>
+            </div>
+          </a>
         </div>
+
         <div class="col-md-4 col-12 mb-4">
-          <div class="card p-3">
-            <h5>Profile Generator</h5>
-            <p>Create beautiful pet profiles for your pets.</p>
-          </div>
+          <a href="./reco.html">
+            <div class="card">
+              <img src="./asset/card1.jpg" class="img-fluid" alt="맞춤 추천" />
+              <div class="card-body">
+                <h5>맞춤 추천</h5>
+                <p>여행지, 관광지, 음식점을 추천합니다</p>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <div class="col-md-4 col-12 mb-4">
+          <a href="community.html">
+            <div class="card">
+              <img src="./asset/card3.jpg" class="img-fluid" alt="커뮤니티" />
+              <div class="card-body">
+                <h5>커뮤니티</h5>
+                <p>반려 동물 커뮤니티</p>
+              </div>
+            </div>
+          </a>
         </div>
       </div>
     </section>
 
     <!-- Success Stories Section -->
-    <section class="container text-center my-5">
+    <!-- <section class="container text-center my-5">
       <h2>Success Stories</h2>
       <div class="row success-stories">
         <div class="col-md-4 col-12 mb-4">
@@ -194,10 +196,10 @@
           <p>Completed their first hiking adventure.</p>
         </div>
       </div>
-    </section>
+    </section> -->
 
     <!-- Quick Search Section -->
-    <section class="container text-center my-5">
+    <!-- <section class="container text-center my-5">
       <h2>Quick Search</h2>
       <p>Find pet-friendly places near you</p>
       <div class="input-group mb-3 w-50 mx-auto">
@@ -212,29 +214,10 @@
           Search
         </button>
       </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6 text-center text-md-start">
-            <p>&copy; 2025 PETTY. All rights reserved.</p>
-          </div>
-          <div class="col-md-6 text-center text-md-end">
-            <!-- Social Media Icons -->
-            <a href="#" class="text-dark me-3"
-              ><i class="bi bi-facebook"></i
-            ></a>
-            <a href="#" class="text-dark me-3"
-              ><i class="bi bi-instagram"></i
-            ></a>
-            <a href="#" class="text-dark"><i class="bi bi-twitter"></i></a>
-          </div>
-        </div>
-      </div>
-    </footer>
-
+    </section> -->
+    <!-- nav bar - js -->
+    <div id="footer"></div>
+    <script src="./script.js" defer></script>
     <!-- Bootstrap JS (Optional, for features like dropdowns) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
