@@ -26,6 +26,10 @@ body {
   height: 100vh;
 }
 
+h2 {
+  font-family: "HakgyoansimDunggeunmisoTTF-B";
+}
+
 /* 캐러셀 컨테이너 */
 .carousel-container {
   width: 90%;
@@ -80,21 +84,68 @@ body {
 }
 
 /* Features Section */
-.features .card {
+/* .features .card {
   border: none;
   border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px #fbc63c;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   margin-bottom: 20px;
 }
 
 .features .card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 12px #fbc63c;
 }
 
 .features h5 {
-  color: #1e3a8a;
+  color: #000000;
+} */
+.features {
+  min-height: 600px;
+}
+
+.features {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.features .card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 20px;
+  height: 100%; /* 카드 높이 통일 */
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.features .card:hover {
+  transform: translateY(-5px);
+}
+
+.features h5 {
+  color: #000000;
+}
+
+.features .card img {
+  width: 100%;
+  height: 250px; /* 원하는 이미지 높이 설정 */
+  object-fit: cover; /* 넘치는 이미지 비율 유지하면서 맞춤 */
+}
+
+.features .card-body {
+  flex: 1; /* 내용이 균등하게 배치되도록 설정 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  padding: 10px;
+}
+
+.features .row {
+  gap: 30px; /* 카드 간격을 조정 */
+}
+
+.features .col-md-4 {
+  padding: 0 20px; /* 좌우 간격 추가 */
 }
 
 /* Success Stories Section */
