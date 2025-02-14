@@ -54,6 +54,54 @@
     <!-- nav bar - js -->
     <div id="navbar"></div>
 
+    <section class="container mt-4">
+      <img src="./asset/007.png" class="img-fluid" />
+    </section>
+
+    <body class="bg-light">
+      <div class="container mt-5">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="card shadow-lg">
+              <div class="card-body">
+                <h3 class="text-center mb-4">사진 및 텍스트 입력</h3>
+
+                <form>
+                  <!-- 이미지 업로드 -->
+                  <div class="mb-3">
+                    <label for="imageUpload" class="form-label"
+                      >반려동물 사진진</label
+                    >
+                    <input
+                      type="file"
+                      class="form-control"
+                      id="imageUpload"
+                      accept="image/*"
+                    />
+                  </div>
+
+                  <!-- 입력 필드 1 -->
+                  <div class="mb-3">
+                    <label for="text1" class="form-label">반려동물 이름</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="text1"
+                      placeholder="제목을 입력하세요"
+                    />
+                  </div>
+                  <!-- 제출 버튼 -->
+                  <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">
+                      제출하기
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     <!-- nav bar - js -->
     <div id="footer"></div>
     <script src="./script.js" defer></script>
