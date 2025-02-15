@@ -240,27 +240,76 @@ function createPostElement(post) {
     : "";
 
   postDiv.innerHTML = `
-      <div class="card shadow-sm">
-          ${imageTag}
-          <div class="card-body">
-              <h5 class="card-title">${post.title}</h5>
-              <p class="card-text">${post.content.substring(0, 50)}...</p>
-              ${dateText}
-              <div class="d-flex justify-content-between mt-3">
-                  <button class="btn btn-sm btn-outline-primary" onclick="enableEditMode('${
-                    post.id
-                  }')">✏ 수정</button>
-                  <button class="btn btn-sm btn-outline-danger" onclick="deletePost('${
-                    post.id
-                  }')">🗑 삭제</button>
-              </div>
-          </div>
-      </div>
-    `;
+        <div class="card shadow-sm">
+            <a href="post-detail.html?id=${
+              post.id
+            }" class="text-decoration-none text-dark">
+                ${imageTag}
+                <div class="card-body">
+                    <h5 class="card-title">${post.title}</h5>
+                    <p class="card-text">${post.content.substring(0, 50)}...</p>
+                    ${dateText}
+                </div>
+            </a>
+            <div class="d-flex justify-content-between mt-3 p-2">
+                <button class="btn btn-sm btn-outline-primary" onclick="enableEditMode('${
+                  post.id
+                }')">✏ 수정</button>
+                <button class="btn btn-sm btn-outline-danger" onclick="deletePost('${
+                  post.id
+                }')">🗑 삭제</button>
+            </div>
+        </div>
+      `;
 
   const postList = document.getElementById("postList");
   postList.appendChild(postDiv);
 }
+// function createPostElement(post) {
+//   const postDiv = document.createElement("div");
+//   postDiv.classList.add("col-md-4", "mb-4"); // 🔹 3개씩 배치 (Bootstrap Grid 활용)
+
+//   const createdDate = new Date(post.created_at).toLocaleString("ko-KR", {
+//     timeZone: "Asia/Seoul",
+//   });
+
+//   const updatedDate = post.updated_at
+//     ? new Date(post.updated_at).toLocaleString("ko-KR", {
+//         timeZone: "Asia/Seoul",
+//       })
+//     : null;
+//   const isUpdated = post.updated_at && post.updated_at !== post.created_at;
+
+//   let dateText = isUpdated
+//     ? `<div class="post-updated text-muted">✏ 수정됨: ${updatedDate}</div>`
+//     : `<div class="post-date text-muted">📅 작성일: ${createdDate}</div>`;
+
+//   let imageTag = post.image_url
+//     ? `<img src="${post.image_url}" class="card-img-top" alt="게시물 이미지">`
+//     : "";
+
+//   postDiv.innerHTML = `
+//       <div class="card shadow-sm">
+//           ${imageTag}
+//           <div class="card-body">
+//               <h5 class="card-title">${post.title}</h5>
+//               <p class="card-text">${post.content.substring(0, 50)}...</p>
+//               ${dateText}
+//               <div class="d-flex justify-content-between mt-3">
+//                   <button class="btn btn-sm btn-outline-primary" onclick="enableEditMode('${
+//                     post.id
+//                   }')">✏ 수정</button>
+//                   <button class="btn btn-sm btn-outline-danger" onclick="deletePost('${
+//                     post.id
+//                   }')">🗑 삭제</button>
+//               </div>
+//           </div>
+//       </div>
+//     `;
+
+//   const postList = document.getElementById("postList");
+//   postList.appendChild(postDiv);
+// }
 
 // function createPostElement(post) {
 //   const postDiv = document.createElement("div");

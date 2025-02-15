@@ -65,55 +65,83 @@ app.post("/posts", async (req, res) => {
   res.json(data);
 });
 
-// 📌 게시글 수정 (PATCH /posts/:id)
-app.put("/posts/:id", async (req, res) => {
-  const { id } = req.params;
-  const { title, content, image_url } = req.body;
-
-  const { error } = await supabase
-    .from("board")
-    .update({ title, content, image_url }) // ✅ Base64 URL을 DB에 저장
-    .eq("id", id);
-
-  if (error) {
-    console.error("🛑 게시글 수정 오류:", error);
-    return res.status(500).json({ error: error.message });
-  }
-
-  res.json({ message: "게시글 수정 완료!" });
-});
-
-// 📌 이미지 삭제
-app.delete("/posts/:id/image", async (req, res) => {
+// 📌 특정 게시글 가져오기 (게시글 상세 조회)
+app.get("/posts/:id", async (req, res) => {
   const { id } = req.params;
 
-  const { error } = await supabase
-    .from("board")
-    .update({ image_url: null }) // 이미지 URL을 NULL로 설정하여 삭제
-    .eq("id", id);
+  try {
+    const { data, error } = await supabase
+      .from("board") // ✅ "board" 테이블에서 특정 ID의 게시글 조회
+      .select("*")
+      .eq("id", id) // ✅ ID가 일치하는 데이터 가져오기
+      .single(); // ✅ 단일 객체 반환
 
-  if (error) {
-    console.error("🛑 이미지 삭제 오류:", error);
-    return res.status(500).json({ error: error.message });
+    if (error) {
+      console.error("🛑 Supabase SELECT 오류:", error);
+      return res.status(500).json({ error: "서버 오류 발생" });
+    }
+
+    if (!data) {
+      console.log("🛑 게시글 없음");
+      return res.status(404).json({ error: "게시글을 찾을 수 없습니다." });
+    }
+
+    res.json(data);
+  } catch (error) {
+    console.error("🛑 서버 오류:", error);
+    res.status(500).json({ error: "서버 오류 발생" });
   }
-
-  res.json({ message: "이미지 삭제 완료!" });
 });
 
-// 📌 게시글 삭제 (DELETE /posts/:id)
-app.delete("/posts/:id", async (req, res) => {
-  const { id } = req.params;
+// // 📌 게시글 수정 (PATCH /posts/:id)
+// app.put("/posts/:id", async (req, res) => {
+//   const { id } = req.params;
+//   const { title, content, image_url } = req.body;
 
-  // 게시글 삭제
-  const { error } = await supabase.from("board").delete().eq("id", id);
+//   const { error } = await supabase
+//     .from("board")
+//     .update({ title, content, image_url }) // ✅ Base64 URL을 DB에 저장
+//     .eq("id", id);
 
-  if (error) {
-    console.error("🛑 게시글 삭제 오류:", error);
-    return res.status(500).json({ error: error.message });
-  }
+//   if (error) {
+//     console.error("🛑 게시글 수정 오류:", error);
+//     return res.status(500).json({ error: error.message });
+//   }
 
-  res.json({ message: "게시글 삭제 완료!" });
-});
+//   res.json({ message: "게시글 수정 완료!" });
+// });
+
+// // 📌 이미지 삭제
+// app.delete("/posts/:id/image", async (req, res) => {
+//   const { id } = req.params;
+
+//   const { error } = await supabase
+//     .from("board")
+//     .update({ image_url: null }) // 이미지 URL을 NULL로 설정하여 삭제
+//     .eq("id", id);
+
+//   if (error) {
+//     console.error("🛑 이미지 삭제 오류:", error);
+//     return res.status(500).json({ error: error.message });
+//   }
+
+//   res.json({ message: "이미지 삭제 완료!" });
+// });
+
+// // 📌 게시글 삭제 (DELETE /posts/:id)
+// app.delete("/posts/:id", async (req, res) => {
+//   const { id } = req.params;
+
+//   // 게시글 삭제
+//   const { error } = await supabase.from("board").delete().eq("id", id);
+
+//   if (error) {
+//     console.error("🛑 게시글 삭제 오류:", error);
+//     return res.status(500).json({ error: error.message });
+//   }
+
+//   res.json({ message: "게시글 삭제 완료!" });
+// });
 
 // 📌 게시글별 댓글 불러오기 (GET /comments?board_id=게시글ID)
 app.get("/comments", async (req, res) => {
