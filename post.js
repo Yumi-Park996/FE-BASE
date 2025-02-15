@@ -1,25 +1,49 @@
 // 여기 추가가
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("loadposttest");
   checkLoginStatus();
 
   // 🔹 현재 페이지가 community.html이면 게시글 불러오기 실행
   if (window.location.pathname.includes("community.html")) {
     loadPosts();
   }
+  const addPostBtn = document.getElementById("addPostBtn");
+  if (addPostBtn) {
+    addPostBtn.addEventListener("click", async () => {
+      const isLoggedIn = await checkLoginStatus();
 
-  // 🔹 현재 페이지가 write.html이면 게시글 작성 기능 실행
-  if (window.location.pathname.includes("write.html")) {
-    const postForm = document.getElementById("postForm");
-    postForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      await createPost();
+      if (isLoggedIn) {
+        console.log("✅ 로그인됨, 게시글 작성 페이지로 이동");
+        window.location.href = "write.html"; // ✅ 로그인 시 write.html로 이동
+      } else {
+        console.warn("🛑 로그인되지 않음, 로그인 페이지로 이동");
+        alert("로그인이 필요합니다!");
+        window.location.href = "login.html"; // ❌ 로그인 안 되어 있으면 login.html로 이동
+      }
     });
   }
 });
-// 여기 추가가
+// 여기 추가
+async function checkLoginStatus() {
+  try {
+    const { data: sessionData, error } = await supabase.auth.getSession();
+
+    if (error || !sessionData?.session) {
+      console.log("🛑 로그인 상태: 로그아웃됨");
+      return false;
+    } else {
+      console.log("✅ 로그인 상태: 로그인됨");
+      return true;
+    }
+  } catch (err) {
+    console.error("🛑 로그인 상태 확인 중 오류 발생:", err);
+    return false;
+  }
+}
 
 // 📌 서버에서 게시글 불러오기
 async function loadPosts() {
+  console.log("loadtest");
   const response = await fetch(`${API_URL}/posts`);
   const posts = await response.json();
 
@@ -213,6 +237,8 @@ postForm.addEventListener("submit", async function (event) {
   document.getElementById("title").value = "";
   document.getElementById("content").value = "";
   document.getElementById("image").value = "";
+
+  window.location.href = "./community.html";
 });
 
 // 📌 게시글을 동적으로 생성하는 함수 (개선된 디자인 적용)
@@ -265,95 +291,6 @@ function createPostElement(post) {
   const postList = document.getElementById("postList");
   postList.appendChild(postDiv);
 }
-// function createPostElement(post) {
-//   const postDiv = document.createElement("div");
-//   postDiv.classList.add("col-md-4", "mb-4"); // 🔹 3개씩 배치 (Bootstrap Grid 활용)
-
-//   const createdDate = new Date(post.created_at).toLocaleString("ko-KR", {
-//     timeZone: "Asia/Seoul",
-//   });
-
-//   const updatedDate = post.updated_at
-//     ? new Date(post.updated_at).toLocaleString("ko-KR", {
-//         timeZone: "Asia/Seoul",
-//       })
-//     : null;
-//   const isUpdated = post.updated_at && post.updated_at !== post.created_at;
-
-//   let dateText = isUpdated
-//     ? `<div class="post-updated text-muted">✏ 수정됨: ${updatedDate}</div>`
-//     : `<div class="post-date text-muted">📅 작성일: ${createdDate}</div>`;
-
-//   let imageTag = post.image_url
-//     ? `<img src="${post.image_url}" class="card-img-top" alt="게시물 이미지">`
-//     : "";
-
-//   postDiv.innerHTML = `
-//       <div class="card shadow-sm">
-//           ${imageTag}
-//           <div class="card-body">
-//               <h5 class="card-title">${post.title}</h5>
-//               <p class="card-text">${post.content.substring(0, 50)}...</p>
-//               ${dateText}
-//               <div class="d-flex justify-content-between mt-3">
-//                   <button class="btn btn-sm btn-outline-primary" onclick="enableEditMode('${
-//                     post.id
-//                   }')">✏ 수정</button>
-//                   <button class="btn btn-sm btn-outline-danger" onclick="deletePost('${
-//                     post.id
-//                   }')">🗑 삭제</button>
-//               </div>
-//           </div>
-//       </div>
-//     `;
-
-//   const postList = document.getElementById("postList");
-//   postList.appendChild(postDiv);
-// }
-
-// function createPostElement(post) {
-//   const postDiv = document.createElement("div");
-//   postDiv.classList.add("post-card"); // 게시글 카드 스타일 적용
-
-//   const createdDate = new Date(post.created_at).toLocaleString("ko-KR", {
-//     timeZone: "Asia/Seoul",
-//   });
-//   const updatedDate = post.updated_at
-//     ? new Date(post.updated_at).toLocaleString("ko-KR", {
-//         timeZone: "Asia/Seoul",
-//       })
-//     : null;
-//   const isUpdated = post.updated_at && post.updated_at !== post.created_at;
-
-//   let dateText = isUpdated
-//     ? `<div class="post-updated">✏ 수정됨: ${updatedDate}</div>`
-//     : `<div class="post-date">📅 작성일: ${createdDate}</div>`;
-
-//   let imageTag = post.image_url
-//     ? `<div class="post-image"><img src="${post.image_url}" alt="게시물 이미지"></div>`
-//     : "";
-
-//   postDiv.innerHTML = `
-//       <div class="post-content">
-//           ${imageTag}
-//           <h3 class="post-title">${post.title}</h3>
-//           <p class="post-text">${post.content}</p>
-//           ${dateText}
-//           <div class="post-actions">
-//               <button class="edit-btn" onclick="enableEditMode('${post.id}')">✏ 수정</button>
-//               <button class="delete-btn" onclick="deletePost('${post.id}')">🗑 삭제</button>
-//           </div>
-//       </div>
-//       <div class="comments-section">
-//           <input type="text" id="comment-input-${post.id}" class="comment-input" placeholder="댓글을 입력하세요">
-//           <button class="comment-btn" onclick="addComment('${post.id}')">💬 댓글 작성</button>
-//           <div class="comments" id="comments-${post.id}"></div>
-//       </div>
-//     `;
-
-//   postList.appendChild(postDiv);
-//   loadComments(post.id);
-// }
 
 // 📌 특정 게시글의 댓글 불러오기 (작성 & 수정 날짜 포함)
 async function loadComments(board_id) {
