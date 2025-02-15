@@ -1,3 +1,23 @@
+// 여기 추가가
+document.addEventListener("DOMContentLoaded", () => {
+  checkLoginStatus();
+
+  // 🔹 현재 페이지가 community.html이면 게시글 불러오기 실행
+  if (window.location.pathname.includes("community.html")) {
+    loadPosts();
+  }
+
+  // 🔹 현재 페이지가 write.html이면 게시글 작성 기능 실행
+  if (window.location.pathname.includes("write.html")) {
+    const postForm = document.getElementById("postForm");
+    postForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      await createPost();
+    });
+  }
+});
+// 여기 추가가
+
 // 📌 서버에서 게시글 불러오기
 async function loadPosts() {
   const response = await fetch(`${API_URL}/posts`);
@@ -198,11 +218,12 @@ postForm.addEventListener("submit", async function (event) {
 // 📌 게시글을 동적으로 생성하는 함수 (개선된 디자인 적용)
 function createPostElement(post) {
   const postDiv = document.createElement("div");
-  postDiv.classList.add("post-card"); // 게시글 카드 스타일 적용
+  postDiv.classList.add("col-md-4", "mb-4"); // 🔹 3개씩 배치 (Bootstrap Grid 활용)
 
   const createdDate = new Date(post.created_at).toLocaleString("ko-KR", {
     timeZone: "Asia/Seoul",
   });
+
   const updatedDate = post.updated_at
     ? new Date(post.updated_at).toLocaleString("ko-KR", {
         timeZone: "Asia/Seoul",
@@ -211,34 +232,79 @@ function createPostElement(post) {
   const isUpdated = post.updated_at && post.updated_at !== post.created_at;
 
   let dateText = isUpdated
-    ? `<div class="post-updated">✏ 수정됨: ${updatedDate}</div>`
-    : `<div class="post-date">📅 작성일: ${createdDate}</div>`;
+    ? `<div class="post-updated text-muted">✏ 수정됨: ${updatedDate}</div>`
+    : `<div class="post-date text-muted">📅 작성일: ${createdDate}</div>`;
 
   let imageTag = post.image_url
-    ? `<div class="post-image"><img src="${post.image_url}" alt="게시물 이미지"></div>`
+    ? `<img src="${post.image_url}" class="card-img-top" alt="게시물 이미지">`
     : "";
 
   postDiv.innerHTML = `
-      <div class="post-content">
+      <div class="card shadow-sm">
           ${imageTag}
-          <h3 class="post-title">${post.title}</h3>
-          <p class="post-text">${post.content}</p>
-          ${dateText}
-          <div class="post-actions">
-              <button class="edit-btn" onclick="enableEditMode('${post.id}')">✏ 수정</button>
-              <button class="delete-btn" onclick="deletePost('${post.id}')">🗑 삭제</button>
+          <div class="card-body">
+              <h5 class="card-title">${post.title}</h5>
+              <p class="card-text">${post.content.substring(0, 50)}...</p>
+              ${dateText}
+              <div class="d-flex justify-content-between mt-3">
+                  <button class="btn btn-sm btn-outline-primary" onclick="enableEditMode('${
+                    post.id
+                  }')">✏ 수정</button>
+                  <button class="btn btn-sm btn-outline-danger" onclick="deletePost('${
+                    post.id
+                  }')">🗑 삭제</button>
+              </div>
           </div>
-      </div>
-      <div class="comments-section">
-          <input type="text" id="comment-input-${post.id}" class="comment-input" placeholder="댓글을 입력하세요">
-          <button class="comment-btn" onclick="addComment('${post.id}')">💬 댓글 작성</button>
-          <div class="comments" id="comments-${post.id}"></div>
       </div>
     `;
 
+  const postList = document.getElementById("postList");
   postList.appendChild(postDiv);
-  loadComments(post.id);
 }
+
+// function createPostElement(post) {
+//   const postDiv = document.createElement("div");
+//   postDiv.classList.add("post-card"); // 게시글 카드 스타일 적용
+
+//   const createdDate = new Date(post.created_at).toLocaleString("ko-KR", {
+//     timeZone: "Asia/Seoul",
+//   });
+//   const updatedDate = post.updated_at
+//     ? new Date(post.updated_at).toLocaleString("ko-KR", {
+//         timeZone: "Asia/Seoul",
+//       })
+//     : null;
+//   const isUpdated = post.updated_at && post.updated_at !== post.created_at;
+
+//   let dateText = isUpdated
+//     ? `<div class="post-updated">✏ 수정됨: ${updatedDate}</div>`
+//     : `<div class="post-date">📅 작성일: ${createdDate}</div>`;
+
+//   let imageTag = post.image_url
+//     ? `<div class="post-image"><img src="${post.image_url}" alt="게시물 이미지"></div>`
+//     : "";
+
+//   postDiv.innerHTML = `
+//       <div class="post-content">
+//           ${imageTag}
+//           <h3 class="post-title">${post.title}</h3>
+//           <p class="post-text">${post.content}</p>
+//           ${dateText}
+//           <div class="post-actions">
+//               <button class="edit-btn" onclick="enableEditMode('${post.id}')">✏ 수정</button>
+//               <button class="delete-btn" onclick="deletePost('${post.id}')">🗑 삭제</button>
+//           </div>
+//       </div>
+//       <div class="comments-section">
+//           <input type="text" id="comment-input-${post.id}" class="comment-input" placeholder="댓글을 입력하세요">
+//           <button class="comment-btn" onclick="addComment('${post.id}')">💬 댓글 작성</button>
+//           <div class="comments" id="comments-${post.id}"></div>
+//       </div>
+//     `;
+
+//   postList.appendChild(postDiv);
+//   loadComments(post.id);
+// }
 
 // 📌 특정 게시글의 댓글 불러오기 (작성 & 수정 날짜 포함)
 async function loadComments(board_id) {
