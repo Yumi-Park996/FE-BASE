@@ -28,7 +28,7 @@ router.get("/:provider", async (req, res) => {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
     options: {
-      redirectTo: "http://127.0.0.1:5500/animal-trip/index.html",
+      redirectTo: "http://127.0.0.1:5500/animal-trip/index.html", //####
     },
   });
 
