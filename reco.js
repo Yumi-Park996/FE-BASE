@@ -128,6 +128,8 @@ document
       document.getElementById("mapModal")
     );
     modal.hide();
+    // 포커스를 모달을 열었던 버튼으로 이동
+    document.querySelector('[data-bs-target="#mapModal"]').focus();
   });
 
 // 선택창 입력 받기
