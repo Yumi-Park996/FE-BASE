@@ -108,3 +108,8 @@
 #footer {
   height: 50px; /* footer의 고정 높이 (예시) */
 }
+
+.postDetailImg {
+  width: 300px;
+  height: 300px;
+}
