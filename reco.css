@@ -61,6 +61,10 @@
   }
 }
 
+h4 {
+  font-family: "HakgyoansimDunggeunmisoTTF-B";
+}
+
 #login-btn.btn.btn-success {
   background-color: #a3520f;
   border: none;
@@ -103,7 +107,19 @@
   color: white;
   border: none;
   font-size: 20px;
-  
+}
+.resultbox {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin: 20px;
+  padding: 10px;
+  align-items: center;
+  text-align: center;
+  justify-items: center;
+  background-color: rgba(212, 212, 212, 0.24);
+  border-radius: 10px;
+}
 /* map.css */
 .infoWindow {
   font-weight: bold;

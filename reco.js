@@ -154,7 +154,7 @@ updateDropdownText("tourTypeMenu", "tourTypeBtn", true);
 //폼 제출 이벤트
 document.getElementById("petForm").addEventListener("submit", function (event) {
   event.preventDefault();
-
+  const styleForm = document.querySelector("#sect-bd");
   const name = document.getElementById("petName").value;
   const species = document.getElementById("petSpecies").value;
   const petSize =
@@ -175,9 +175,9 @@ document.getElementById("petForm").addEventListener("submit", function (event) {
       : "선택 안 함";
   const location =
     document.getElementById("locationInput").value || "선택 안 함";
-
+  styleForm.style.display = "none";
   document.getElementById("result").innerHTML = `
-      <h4>입력한 정보</h4>
+      <h4>🐶입력한 정보😽</h4>
       <p><strong>이름:</strong> ${name}</p>
       <p><strong>종:</strong> ${species}</p>
       <p><strong>동물 크기:</strong> ${petSize}</p>
