@@ -59,6 +59,15 @@
   cursor: pointer;
 }
 
+.edit-btn {
+  background: gold;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 .card {
   border-radius: 10px;
   overflow: hidden;
