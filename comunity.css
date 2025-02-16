@@ -29,8 +29,11 @@
 }
 
 .form-container button {
-  background-color: #0d5729;
-  border: #0d5729;
+  background-color: #a3520f;
+  border: none;
+  
+}.form-container button:hover {
+    background-color: #eb7719;
 }
 .post-card {
   background: white;
@@ -91,4 +94,17 @@
 .post-updated,
 .post-date {
   font-size: 0.8rem;
+}
+.container.form-container {
+  font-family: "HakgyoansimDunggeunmisoTTF-B";
+}
+#login-btn.btn.btn-success {
+  background-color: #a3520f;
+  border: none;
+}
+.login-btn.btn.btn-success button:hover {
+  background-color: #eb7719;
+}
+.navbar.navbar-expand-lg.navbar-light.bg-white.shadow-sm.container-fluid {
+  font-family: "HakgyoansimDunggeunmisoTTF-B";
 }
