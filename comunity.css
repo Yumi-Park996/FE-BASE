@@ -95,16 +95,43 @@
 .post-date {
   font-size: 0.8rem;
 }
+
+#spinnerContainer {
+  flex: 1; /* 남은 공간을 차지하도록 설정 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#mainContainer {
+  flex: 1; /* spinnerContainer와 공유할 메인 영역 */
+  display: flex;
+  flex-direction: column;
+}
+
+#footer {
+  height: 50px; /* footer의 고정 높이 (예시) */
+}
+
+.postDetailImg {
+  width: 300px;
+  height: 300px;
+}
+
 .container.form-container {
   font-family: "HakgyoansimDunggeunmisoTTF-B";
 }
+
 #login-btn.btn.btn-success {
   background-color: #a3520f;
   border: none;
 }
+
 .login-btn.btn.btn-success button:hover {
   background-color: #eb7719;
 }
+
 .navbar.navbar-expand-lg.navbar-light.bg-white.shadow-sm.container-fluid {
   font-family: "HakgyoansimDunggeunmisoTTF-B";
 }
+

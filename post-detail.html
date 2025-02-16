@@ -34,7 +34,7 @@
       content="https://github.com/user-attachments/assets/42edc0f5-5e02-4709-97c5-3009ed6cdeb2"
     />
     <link rel="stylesheet" href="./style.css" />
-
+    <link rel="stylesheet" href="./community.css" />
     <!-- Bootstrap CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
@@ -48,18 +48,28 @@
 
     <title>PETTY | 반려동물과 함께 떠나는 완벽한 여행</title>
     <link rel="stylesheet" href="common.css" />
-    <link rel="stylesheet" href="comunity.css" />
+    <link rel="stylesheet" href="community.css" />
   </head>
   <!-- ====== body ======= -->
   <body>
     <!-- nav bar - js -->
     <div id="navbar"></div>
-
-    <div class="container mt-4">
-      <div id="postDetail"></div>
-      <button onclick="window.history.back()" class="btn btn-secondary mt-3">
-        ⬅ 돌아가기
-      </button>
+    <div class="mainContainer">
+      <div
+        id="spinnerContainer"
+        class="text-center mt-3"
+        style="display: block"
+      >
+        <div class="spinner-border text-success" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+      <div class="container mt-4">
+        <div id="postDetail"></div>
+        <button onclick="window.history.back()" class="btn btn-secondary mt-3">
+          ⬅ 돌아가기
+        </button>
+      </div>
     </div>
 
     <!-- nav bar - js -->

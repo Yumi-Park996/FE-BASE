@@ -63,15 +63,20 @@
       <button id="addPostBtn" class="btn btn-primary">게시글 추가</button>
     </section>
 
-    <!-- 게시글 목록 -->
-    <div id="spinnerContainer" class="text-center mt-3" style="display: block">
-      <div class="spinner-border text-success" role="status">
-        <span class="visually-hidden">Loading...</span>
+    <div id="mainContainer">
+      <div
+        id="spinnerContainer"
+        class="text-center mt-3"
+        style="display: block"
+      >
+        <div class="spinner-border text-success" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
       </div>
-    </div>
-    <div class="container">
-      <div class="row" id="postList"></div>
-      <!-- 🔹 한 줄에 3개씩 배치 -->
+      <div class="container">
+        <div class="row" id="postList"></div>
+        <!-- 🔹 한 줄에 3개씩 배치 -->
+      </div>
     </div>
 
     <!-- nav bar - js -->
