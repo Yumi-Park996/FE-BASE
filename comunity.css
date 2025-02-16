@@ -1,58 +1,94 @@
-@font-face {
-  font-family: "HakgyoansimDunggeunmisoTTF-B";
-  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2408-5@1.0/HakgyoansimDunggeunmisoTTF-B.woff2")
-    format("woff2");
-  font-weight: 700;
-  font-style: normal;
-}
-@font-face {
-  font-family: "Pretendard-Regular";
-  src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
-    format("woff");
-  font-weight: 400;
-  font-style: normal;
-}
-@font-face {
-  font-family: "GmarketSansMedium";
-  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff")
-    format("woff");
-  font-weight: normal;
-  font-style: normal;
+.community-container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
-body {
-  font-family: "Pretendard-Regular", sans-serif;
-  background-color: #f8f9fa;
+.community-container img {
+  width: 300px;
 }
 
-.navbar-brand {
-  font-weight: bold;
-  color: #1e3a8a;
-}
-
-#postContainer {
+#postForm {
   display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+#postForm img {
+  width: 200px;
+}
+.form-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.form-container button {
+  background-color: #0d5729;
+  border: #0d5729;
+}
+.post-card {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.post-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.post-text {
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+.delete-btn {
+  background: red;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .card {
-  width: 18rem;
-  transition: transform 0.3s ease;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.2s ease-in-out;
 }
 
 .card:hover {
-  transform: scale(1.05);
+  transform: translateY(-5px);
 }
 
-.card img {
-  height: 200px;
+.card-img-top {
+  height: 200px; /* 이미지 크기 일정하게 */
   object-fit: cover;
 }
 
-.footer {
-  background-color: #ffe18e;
-  padding: 15px 0;
-  text-align: center;
+.card-body {
+  padding: 15px;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.card-text {
+  font-size: 0.9rem;
   color: #666;
+}
+
+.post-updated,
+.post-date {
+  font-size: 0.8rem;
 }

@@ -1,0 +1,17 @@
+.card {
+  max-width: 1200px;
+  margin: 0 auto;
+  border-radius: 15px;
+}
+
+.card-title {
+  font-weight: bold;
+}
+
+.form-control {
+  border-radius: 10px;
+}
+
+.form-section {
+  margin-bottom: 80px;
+}
