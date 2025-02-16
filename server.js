@@ -101,50 +101,19 @@ app.get("/posts/:id", async (req, res) => {
   }
 });
 
-//####
 // 📌 게시글 수정 (PATCH /posts/:id)
-app.patch("/posts/:id", async (req, res) => {
+app.put("/posts/:id", async (req, res) => {
   const { id } = req.params;
   const { title, content, image_url } = req.body;
 
-  // ✅ 1. 기존 게시글 정보 가져오기 (이전 이미지 URL 포함)
-  const { data: existingPost, error: fetchError } = await supabase
+  const { error } = await supabase
     .from("board")
-    .select("image_url")
-    .eq("id", id)
-    .single();
-
-  if (fetchError) {
-    console.error("🛑 기존 게시글 조회 오류:", fetchError);
-    return res.status(500).json({ error: "게시글을 찾을 수 없습니다." });
-  }
-
-  // ✅ 2. 기존 이미지 삭제 (새로운 이미지가 업로드된 경우만)
-  if (
-    image_url &&
-    existingPost.image_url &&
-    image_url !== existingPost.image_url
-  ) {
-    const filePath = existingPost.image_url.split("/images/")[1]; // Storage 파일명 추출
-    const { error: deleteImageError } = await supabase.storage
-      .from("images")
-      .remove([filePath]);
-
-    if (deleteImageError) {
-      console.error("🛑 기존 이미지 삭제 오류:", deleteImageError);
-      return res.status(500).json({ error: "기존 이미지 삭제 실패" });
-    }
-  }
-
-  // ✅ 3. 게시글 업데이트
-  const { error: updateError } = await supabase
-    .from("board")
-    .update({ title, content, image_url }) // 새로운 이미지 URL 저장
+    .update({ title, content, image_url }) // ✅ Base64 URL을 DB에 저장
     .eq("id", id);
 
-  if (updateError) {
-    console.error("🛑 게시글 수정 오류:", updateError);
-    return res.status(500).json({ error: updateError.message });
+  if (error) {
+    console.error("🛑 게시글 수정 오류:", error);
+    return res.status(500).json({ error: error.message });
   }
 
   res.json({ message: "게시글 수정 완료!" });
@@ -167,50 +136,19 @@ app.delete("/posts/:id/image", async (req, res) => {
   res.json({ message: "이미지 삭제 완료!" });
 });
 
-//####
 // 📌 게시글 삭제 (DELETE /posts/:id)
 app.delete("/posts/:id", async (req, res) => {
   const { id } = req.params;
 
-  // ✅ 1. 기존 게시글 정보 가져오기 (이미지 URL 포함)
-  const { data: post, error: fetchError } = await supabase
-    .from("board")
-    .select("image_url")
-    .eq("id", id)
-    .single();
+  // 게시글 삭제
+  const { error } = await supabase.from("board").delete().eq("id", id);
 
-  if (fetchError) {
-    console.error("🛑 게시글 조회 오류:", fetchError);
-    return res.status(500).json({ error: "게시글을 찾을 수 없습니다." });
+  if (error) {
+    console.error("🛑 게시글 삭제 오류:", error);
+    return res.status(500).json({ error: error.message });
   }
 
-  // ✅ 2. 게시글 삭제
-  const { error: deletePostError } = await supabase
-    .from("board")
-    .delete()
-    .eq("id", id);
-
-  if (deletePostError) {
-    console.error("🛑 게시글 삭제 오류:", deletePostError);
-    return res.status(500).json({ error: deletePostError.message });
-  }
-
-  // ✅ 3. 게시글에 이미지가 있었으면 Storage에서도 삭제
-  if (post.image_url) {
-    const filePath = post.image_url.split("/images/")[1]; // Storage 파일명 추출
-    const { error: deleteImageError } = await supabase.storage
-      .from("images")
-      .remove([filePath]);
-
-    if (deleteImageError) {
-      console.error("🛑 Storage 이미지 삭제 오류:", deleteImageError);
-      return res.status(500).json({
-        error: "게시글 삭제는 완료되었지만, 이미지 삭제에 실패했습니다.",
-      });
-    }
-  }
-
-  res.json({ message: "게시글 및 이미지 삭제 완료!" });
+  res.json({ message: "게시글 삭제 완료!" });
 });
 
 // 📌 게시글별 댓글 불러오기 (GET /comments?board_id=게시글ID)
