@@ -161,6 +161,9 @@ async function deletePost(postId) {
 
   const response = await fetch(`${API_URL}/posts/${postId}`, {
     method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${access_token}`, // ✅ Authorization 헤더 추가
+    },
   });
 
   if (response.ok) {

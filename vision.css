@@ -1,3 +1,95 @@
+@font-face {
+  font-family: "HakgyoansimDunggeunmisoTTF-B";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/2408-5@1.0/HakgyoansimDunggeunmisoTTF-B.woff2")
+    format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Pretendard-Regular";
+  src: url("https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff")
+    format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "GmarketSansMedium";
+  src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
 #showImg {
   width: 300px;
+}
+.form-label {
+  font-size: 20px;
+  font-family: "HakgyoansimDunggeunmisoTTF-B";
+  background-color: #fff9c1;
+  border-radius: 20px;
+  padding: 7px;
+  color: #a3520f;
+}
+.text-center.mb-4 {
+  font-size: 30px;
+  font-family: "HakgyoansimDunggeunmisoTTF-B";
+  color: #a3520f;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-radius: 20px;
+}
+#imageInput.form-control {
+  font-size: 18px;
+  font-family: "HakgyoansimDunggeunmisoTTF-B";
+  font-size: 18px;
+  border-radius: 5px;
+}
+
+#petName.form-control::placeholder {
+  color: rgb(37, 37, 37);
+  font-size: 18px;
+}
+
+#petName.form-control {
+  input::placeholder {
+    color: black;
+  }
+  font-size: 18px;
+  font-family: "HakgyoansimDunggeunmisoTTF-B";
+}
+#submitBtn.btn.btn-primary {
+  background-color: #a3520f;
+  font-family: "HakgyoansimDunggeunmisoTTF-B";
+  border: none;
+  font-size: 20px;
+}
+#formContainer.card-body {
+  border-radius: 30px; 
+}
+
+#login-btn.btn.btn-success {
+  background-color: #a3520f;
+  border: none;
+}
+
+#navbarNav.collapse.navbar-collapse {
+  font-family: "HakgyoansimDunggeunmisoTTF-B";
+}
+
+#result {
+  font-family: "HakgyoansimDunggeunmisoTTF-B";
+  background-color: white;
+  padding: 30px;
+  font-size: 20px;
+}
+
+body {
+  /* background-image: url(/FE-BASE/FE-BASE/asset/bg-removebg-preview.png); */
+  background-image: url(/FE-BASE/FE-BASE/asset/right_bottom_smaller_image.png);
+  background-repeat: no-repeat;
+  background-position: right bottom;
+  background-position: top center; /* 위아래 고정, 가운데 정렬 */
+  background-size: auto 97%; /* 높이는 100%, 너비는 자동 */
+  background-attachment: fixed; /* 배경 고정 */
 }
