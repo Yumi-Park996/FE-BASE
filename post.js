@@ -243,6 +243,7 @@ postForm.addEventListener("submit", async function (event) {
 
 // 📌 게시글을 동적으로 생성하는 함수 (개선된 디자인 적용)
 function createPostElement(post) {
+  const spinner = document.querySelector("#spinnerContainer");
   const postDiv = document.createElement("div");
   postDiv.classList.add("col-md-4", "mb-4"); // 🔹 3개씩 배치 (Bootstrap Grid 활용)
 
@@ -289,6 +290,7 @@ function createPostElement(post) {
       `;
 
   const postList = document.getElementById("postList");
+  spinner.style.display = "none";
   postList.appendChild(postDiv);
 }
 
