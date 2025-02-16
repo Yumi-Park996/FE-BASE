@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 async function loadPostDetail(postId) {
+  const spinner = document.querySelector("#spinnerContainer");
   try {
     const response = await fetch(`${API_URL}/posts/${postId}`);
     const post = await response.json();
@@ -38,15 +39,16 @@ async function loadPostDetail(postId) {
       : `<div class="text-muted">📅 작성일: ${createdDate}</div>`;
 
     let imageTag = post.image_url
-      ? `<img src="${post.image_url}" class="img-fluid rounded mb-3" alt="게시물 이미지">`
+      ? `<img src="${post.image_url}" class="img-fluid rounded mb-3 postDetailImg" alt="게시물 이미지">`
       : "";
-
+    spinner.style.display = "none";
     document.getElementById("postDetail").innerHTML = `
       <div class="card shadow-lg p-4">
+        <h2>${post.title}</h2>
           ${imageTag}
-          <h2>${post.title}</h2>
-          <p>${post.content}</p>
-          ${dateText}
+          
+          <h4>${post.content}</h4>
+          <p class="dataText">${dateText}</p>
       </div>
     `;
   } catch (error) {
