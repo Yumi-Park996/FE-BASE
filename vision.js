@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         resultContainer.style.display = "block";
         imgBox.src = URL.createObjectURL(file);
 
-        //```html 제거
+        //```html ~ ```제거
         const parsed = finalAnswer3
           .replace(/\`\`\`html/g, "")
           .replace(/\`\`\`/g, "");
