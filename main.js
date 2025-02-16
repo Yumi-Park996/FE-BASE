@@ -20,9 +20,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // ✅ 네비게이션 바 동적으로 로드
   await loadNavbar();
-
-  // ✅ 네비게이션 바가 로드된 후 로그인 상태 확인
-  checkLogin();
+  setTimeout(() => {
+    console.log("네비게이션 로드 후 실행");
+    checkLogin();
+  }, 100);
 });
 // 📌 네비게이션 바 동적 로드 함수
 async function loadNavbar() {

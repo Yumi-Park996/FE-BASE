@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="./script.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <!-- favicon -->
     <link
       rel="icon"
@@ -47,23 +48,62 @@
 
     <title>PETTY | 반려동물과 함께 떠나는 완벽한 여행</title>
 
-    <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="common.css" />
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <link rel="stylesheet" href="write.css" />
   </head>
   <!-- ====== body ======= -->
   <body>
     <!-- nav bar - js -->
     <div id="navbar"></div>
 
-    <section class="write-container">
-      <h2>게시글 작성</h2>
-      <form id="postForm">
-        <input type="text" id="title" placeholder="제목" required />
-        <textarea id="content" placeholder="내용" required></textarea>
-        <input type="file" id="image" />
-        <button type="submit">게시글 작성</button>
-      </form>
+    <section class="container mt-4">
+      <img src="./asset/006.png" class="img-fluid" />
+    </section>
+
+    <section class="container mt-5 form-section">
+      <div class="card shadow-lg p-4">
+        <div class="card-body text-center">
+          <h2 class="card-title mb-3">게시글 작성</h2>
+          <p class="text-muted">
+            반려동물의 사진, 자랑글, 고민글 등 다양한 이야기를 나눠보세요
+          </p>
+
+          <form id="postForm">
+            <!-- 제목 입력 -->
+            <div class="form-group mb-3">
+              <input
+                type="text"
+                id="title"
+                class="form-control"
+                placeholder="제목을 입력하세요"
+                required
+              />
+            </div>
+
+            <!-- 내용 입력 -->
+            <div class="form-group mb-3">
+              <textarea
+                id="content"
+                class="form-control"
+                rows="4"
+                placeholder="내용을 입력하세요"
+                required
+              ></textarea>
+            </div>
+
+            <!-- 이미지 업로드 -->
+            <div class="form-group mb-3">
+              <label for="image" class="form-label">이미지 업로드</label>
+              <input type="file" id="image" class="form-control" />
+            </div>
+
+            <!-- 제출 버튼 -->
+            <button type="submit" class="btn btn-success w-100">
+              게시글 작성
+            </button>
+          </form>
+        </div>
+      </div>
     </section>
 
     <!-- nav bar - js -->
