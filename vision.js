@@ -120,7 +120,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         resultContainer.style.display = "block";
         imgBox.src = URL.createObjectURL(file);
 
-        result3.innerHTML = `📌 ${name} 분석 결과 : ${finalAnswer3}`;
+        //```html ~ ```제거
+        const parsed = finalAnswer3
+          .replace(/\`\`\`html/g, "")
+          .replace(/\`\`\`/g, "");
+        result3.innerHTML = `📌 ${name} 분석 결과 : ${parsed}`;
+
         content.appendChild(result3);
       } catch (error) {
         console.error("🚨 오류 발생:", error);
