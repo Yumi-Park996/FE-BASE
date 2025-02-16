@@ -64,21 +64,10 @@
             <div class="col-md-6">
               <div class="card shadow-lg">
                 <div class="card-body" id="formContainer">
-                  <h3 class="text-center mb-4">반려 동물 사진을 입력하세요</h3>
+                  <h3 class="text-center mb-4">반려 동물 정보를 입력하세요</h3>
 
                   <form id="controller">
                     <!-- 이미지 업로드 -->
-                    <div class="mb-3">
-                      <label for="imageInput" class="form-label"
-                        >반려동물 사진</label
-                      >
-                      <input
-                        type="file"
-                        class="form-control"
-                        id="imageInput"
-                        accept="image/*"
-                      />
-                    </div>
 
                     <div class="mb-3">
                       <label for="petName" class="form-label"
@@ -92,6 +81,18 @@
                       />
                     </div>
 
+                    <div class="mb-3">
+                      <label for="imageInput" class="form-label"
+                        >반려동물 사진</label
+                      >
+                      <input
+                        type="file"
+                        class="form-control"
+                        id="imageInput"
+                        accept="image/*"
+                      />
+                    </div>
+
                     <!-- 제출 버튼 -->
                     <div class="d-grid">
                       <button
@@ -99,7 +100,7 @@
                         class="btn btn-primary"
                         id="submitBtn"
                       >
-                        API Model Chaining
+                        분석하기
                       </button>
                     </div>
                   </form>
