@@ -10,7 +10,7 @@ const supabase = window.supabase.createClient(
 // ✅ Supabase 객체가 정상적으로 생성되었는지 확인
 console.log("✅ Supabase 객체:", supabase);
 
-const API_URL = "http://127.0.0.1:3000"; // 백엔드 서버 주소
+const API_URL = "https://big-adventurous-kettledrum.glitch.me"; // 백엔드 서버 주소
 
 const postList = document.getElementById("postList");
 const postForm = document.getElementById("postForm");
@@ -50,7 +50,7 @@ async function signInWithProvider(provider) {
   console.log(`🔹 기존 세션 초기화 중...`);
   await supabase.auth.signOut(); // ✅ 기존 세션 삭제 후 로그인 진행
   console.log(window.location.origin);
-  const redirectUrl = window.location.origin + "/animal-trip/index.html"; // ✅ 로그인 후 돌아올 경로
+  const redirectUrl = window.location.origin + "/FE-BASE"; // ✅ 로그인 후 돌아올 경로
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: provider,

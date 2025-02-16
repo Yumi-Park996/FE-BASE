@@ -1,301 +1,250 @@
-// app.js
+// const baseUrl = "http://localhost:3000";
+const baseUrl = "https://miniature-purple-scissor.glitch.me";
 
-// -------------------- 설정 상수 --------------------
-// 서버 프록시 엔드포인트 (Glitch 환경변수에 설정된 API 키 사용)
-const BASE_API_URL = "https://api-calling.glitch.me";
-const GEMINI_API_ENDPOINT = BASE_API_URL + "/api/gemini";
-const TOGETHER_API_ENDPOINT = BASE_API_URL + "/api/together";
-const GROQ_API_ENDPOINT = BASE_API_URL + "/api/groq";
+// 📌 장소 목록 조회
+async function fetchBaseList(tourValue) {
+  try {
+    const response = await fetch(
+      `${baseUrl}/baselist?tourValue=${tourValue}&lat=${window.selectedLatlng.lat}&lng=${window.selectedLatlng.lng}`
+    );
 
-// Supabase 설정
-const supabaseUrl = "https://pwuuasxrbjfxndcqyaql.supabase.co";
-const supabaseAnonKey =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3dXVhc3hyYmpmeG5kY3F5YXFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk0NDYzMjQsImV4cCI6MjA1NTAyMjMyNH0.0XMx7rweHHAbSVbCxLKCU5cm4f5zm2u0sh5i54cbGEg";
-const SUPABASE_BUCKET = "my-bucket";
+    // const data = await response.text(); // JSON 대신 text로 받아보기
+    // console.log("📌 응답 본문:", data);
 
-const supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    const data = await response.json();
 
-// -------------------- 헬퍼 함수 --------------------
-
-// Supabase에 파일 업로드 (폴더 선택 가능)
-async function uploadImageToSupabase(file, folder = "") {
-  const fileName = folder
-    ? `${folder}/${Date.now()}_${file.name}`
-    : `${Date.now()}_${file.name}`;
-  const { error } = await supabaseClient.storage
-    .from(SUPABASE_BUCKET)
-    .upload(fileName, file);
-  if (error) throw error;
-  const { data, error: urlError } = supabaseClient.storage
-    .from(SUPABASE_BUCKET)
-    .getPublicUrl(fileName);
-  if (urlError) throw urlError;
-  return data.publicUrl;
+    // contentid만 추출하여 배열로 반환
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error("Error fetching content IDs:", error);
+    return [];
+  }
 }
 
-// 메시지 템플릿 생성 (토큰 최적화를 위해 JSON 내부 공백 제거)
-function createMessagePayload(imageUrl) {
-  return [
-    {
-      role: "user",
-      content: `다음은 이미지입니다:\n\n![](${imageUrl})\n\n이 이미지를 참고하여 해당 동물의 정보를 아래 JSON 형식에 맞춰 알려주세요:\n\n{"species":"동물의 종","size":"대략적인 크기","weight":"대략적인 무게","is_predator":"맹수 여부 (true/false)","is_allowed_in_public":"공공장소 동행 가능 여부 (true/false)"}`,
-    },
-  ];
+// 📌 개별 API 호출 (각 contentid에 대해 호출)
+async function fetchDetail(contentId) {
+  try {
+    const response = await fetch(
+      `${baseUrl}/tour/detail?contentId=${contentId}`
+    );
+
+    // const data = await response.text(); // JSON 대신 text로 받아보기
+    // console.log("📌 응답 본문:", data);
+
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+    const data = await response.json();
+    return data; // 상세 정보 반환
+  } catch (error) {
+    console.error(`Error fetching details for contentId ${contentId}:`, error);
+    return null;
+  }
 }
 
-// Gemini API 호출 및 재시도 로직
-async function callGeminiModels(payload) {
-  const res = await fetch(GEMINI_API_ENDPOINT, {
+function getSelectedTourValue() {
+  const selectedRadio = document.querySelector(
+    'input[name="tourType"]:checked'
+  );
+  if (selectedRadio) {
+    return selectedRadio.value;
+  }
+  return ""; // 아무것도 선택되지 않았을 경우
+}
+
+// 📌 모든 API 호출 실행
+async function fetchAllDetails() {
+  // 관광 카테고리
+  const tourValue = getSelectedTourValue();
+  console.log(tourValue + "\n");
+
+  // 장소 기본 정보
+  if (!window.selectedLatlng?.lng || !window.selectedLatlng?.lat) {
+    // 하나라도 falsy한 값일 경우
+    alert("지도에 마커를 표시해 주세요!");
+    return;
+  }
+  const data = await fetchBaseList(tourValue);
+
+  // 만약에 data가 없다면 종료
+  if (data.length === 0) {
+    console.log("주위의 정보 없음", data);
+
+    const resultDiv = document.getElementById("result");
+    const div = document.createElement("div");
+
+    // 조회된 관광/숙소가 없음
+    const message = document.createElement("p");
+    message.textContent = "조회된 관광/숙소가 없음";
+    div.appendChild(message);
+
+    // resultDiv 안에 추가
+    resultDiv.appendChild(div);
+
+    return;
+  }
+
+  // contentid 배열 가져오기
+  const contentIds = data.map((item) => item.contentid);
+
+  console.log("📌 가져온 contentId 목록:", contentIds);
+
+  if (contentIds.length === 0) {
+    console.error("📌 contentId가 없습니다.");
+    return;
+  }
+
+  // Promise.all()로 모든 API 호출 실행
+  const detailsArray = await Promise.all(contentIds.map(fetchDetail));
+
+  console.log(detailsArray);
+  // 📌 배열 내부 구조 확인 후 문자열 변환
+  const detailsString = detailsArray
+    .map((detail, index) => {
+      if (!detail || !Array.isArray(detail) || detail.length === 0) return null;
+      const item = detail[0]; // 첫 번째 요소 가져오기
+
+      // 장소의 속성 정리
+      Object.keys(item).forEach((key) => {
+        if (typeof item[key] === "string") {
+          item[key] = item[key].replace(/[-\s]+/g, " ").trim();
+        }
+      });
+
+      const info = data[index];
+      const title = info.title;
+      const addr = `${info.addr1} ${info.addr2}`;
+
+      return `${index}번 장소 이름: ${title} 상세 주소: ${addr} 사고 예방 및 응급 조치 관련 정보: ${item.relaAcdntRiskMtr}, 반려동물 동반 가능 구역 정보: ${item.acmpyTypeCd}, 관련 시설: ${item.relaPosesFclty}, 제공되는 반려동물 관련 용품: ${item.relaFrnshPrdlst}, 기타 동반 정보: ${item.etcAcmpyInfo}, 구매 가능한 제품 목록: ${item.relaPurcPrdlst}, 동반 가능한 반려견 기준: ${item.acmpyPsblCpam}, 대여 관련 제품 목록: ${item.relaRntlPrdlst}, 필수 동반 조건: ${item.acmpyNeedMtr}`;
+    })
+    .filter((item) => item !== null) // null 값 제거
+    .join("\n"); // 줄바꿈으로 연결
+
+  // pet 정보
+  // 각 input 필드의 값을 가져오기
+  const name = document.getElementById("petName").value.trim();
+  const species = document.getElementById("petSpecies").value.trim();
+  const size =
+    document.getElementById("petSizeBtn").textContent !== "선택"
+      ? document.getElementById("petSizeBtn").textContent.trim()
+      : "선택 안 함";
+  const isPredator =
+    document.getElementById("isPredatorBtn").textContent !== "선택"
+      ? document.getElementById("isPredatorBtn").textContent.trim()
+      : "선택 안 함";
+  const isPublicFriendly =
+    document.getElementById("publicAccessBtn").textContent !== "선택"
+      ? document.getElementById("publicAccessBtn").textContent.trim()
+      : "선택 안 함";
+
+  // 값을 하나의 문자열로 연결
+  const petInfo = `이름: ${name}, 종: ${species}, 크기: ${size}, 맹수 여부: ${isPredator}, 공공장소 동행 가능 여부: ${isPublicFriendly}`;
+  const prompt =
+    "숙소 정보:\n" + detailsString + "\n반려동물 정보:\n" + petInfo;
+  console.log("📌 숙소 정보, 펫 정보:\n", prompt);
+
+  // gemini에게 물어봅시다..
+  const url = `https://miniature-purple-scissor.glitch.me/gemini?type=${tourValue}`;
+  const response = await fetch(url, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
+    body: JSON.stringify({
+      text: prompt,
+    }),
+    // Content-Type 꼭!
+    headers: {
+      "Content-Type": "Application/json",
+    },
   });
-  if (!res.ok) throw new Error("Gemini API HTTP 에러: " + res.status);
-  return res.json();
+  const json = await response.json();
+  let infoList = JSON.parse(json.reply);
+
+  // 화면에 보여주는 함수
+  displayInfo(infoList, data, tourValue);
 }
 
-async function callGeminiWithRetry(payload, retries = 3, delay = 3000) {
-  try {
-    const result = await callGeminiModels(payload);
-    if (result) return result;
-  } catch (e) {
-    console.warn(`Gemini 호출 오류: ${e.message}`);
-  }
-  if (retries > 0) {
-    console.warn(`재시도 중... 남은 재시도: ${retries}`);
-    await new Promise((res) => setTimeout(res, delay));
-    return callGeminiWithRetry(payload, retries - 1, delay * 2);
-  }
-  throw new Error("Gemini API 요청 실패");
-}
+function displayInfo(infoList, data, tourValue) {
+  const resultDiv = document.getElementById("result");
 
-// 공통 API 호출 함수 (Together, GROQ)
-// 클라이언트에서는 별도의 API 키 없이 서버 프록시를 호출합니다.
-async function callApi(endpoint, body, label) {
-  try {
-    const response = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    if (!response.ok) {
-      const errData = await response.json();
-      throw new Error(
-        `${label} API HTTP 에러: ${response.status} - ${JSON.stringify(
-          errData
-        )}`
-      );
+  // 조건에 부합되는 관광/숙소가 없다면
+  if (infoList[0] === -1 || infoList.length === 0) {
+    const div = document.createElement("div");
+
+    // 반려 동물 정보에 맞는 관광/숙소가 없음
+    const message = document.createElement("p");
+    message.textContent = "반려 동물 정보에 맞는 관광/숙소가 없음";
+    div.appendChild(message);
+
+    // resultDiv 안에 추가
+    resultDiv.appendChild(div);
+
+    return;
+  }
+
+  // data 배열에서 각 숙소의 정보 출력
+  for (const [index, placeInfo] of infoList.entries()) {
+    const item = data[placeInfo.NUMBER]; // 번호에 맞는 숙소 정보
+
+    const div = document.createElement("div");
+    div.id = `${tourValue}-${index}`; // 인덱스를 기반으로 id 설정
+
+    // 숙소 이름
+    const title = document.createElement("h3");
+    title.textContent = item.title;
+    div.appendChild(title);
+
+    // 숙소 주소
+    const address = document.createElement("p");
+    address.textContent = `주소: ${item.addr1} ${item.addr2}`;
+    div.appendChild(address);
+
+    // 숙소 이미지 (없으면 대체 이미지 설정)
+    const image = document.createElement("img");
+    if (item.firstimage) {
+      image.src = item.firstimage;
+    } else {
+      image.src = "https://placehold.co/437x291.png"; // 기본 이미지 경로
     }
-    return await response.json();
-  } catch (error) {
-    console.error(`${label} API 호출 중 오류:`, error.message);
-    throw error;
+    image.alt = item.title;
+    image.style.width = "50%"; // 이미지 크기 조절
+    div.appendChild(image);
+
+    // 주요특징
+    const info = document.createElement("p");
+    info.textContent = `주요 특징: ${
+      placeInfo.INFO && placeInfo.INFO.trim() ? placeInfo.INFO : "정보 없음"
+    }`;
+
+    div.appendChild(info);
+
+    // 운영시간
+    const time = document.createElement("p");
+    time.textContent = `운영 시간: ${
+      placeInfo.TIME && placeInfo.TIME.trim() ? placeInfo.TIME : "정보 없음"
+    }`;
+
+    div.appendChild(time);
+
+    // 전화번호
+    const tel = document.createElement("p");
+    tel.textContent = `전화번호: ${
+      item.tel && item.tel.trim() ? item.tel : "정보 없음"
+    }`;
+
+    div.appendChild(tel);
+
+    /*
+    // 숙소 링크 (필요시 추가)
+    const link = document.createElement("a");
+    link.href = `http://tour.visitkorea.or.kr/${item.contentid}`;
+    link.target = "_blank";
+    link.textContent = "상세보기";
+    div.appendChild(link);
+    */
+
+    resultDiv.appendChild(div);
   }
 }
 
-// 응답 내 JSON 객체 추출 및 파싱
-function extractJSON(text) {
-  const first = text.indexOf("{");
-  const last = text.lastIndexOf("}");
-  return first !== -1 && last !== -1 && last > first
-    ? text.substring(first, last + 1)
-    : text;
-}
-function safeJSONParse(text) {
-  if (text.trim().startsWith("{")) {
-    try {
-      return JSON.parse(text);
-    } catch (e) {
-      console.error("JSON 파싱 실패:", e);
-    }
-  }
-  return text;
-}
-function parseAPIResponse(data) {
-  const content =
-    data?.choices?.[0]?.message?.content || JSON.stringify(data, null, 2);
-  try {
-    return safeJSONParse(extractJSON(content));
-  } catch (e) {
-    console.error("응답 파싱 오류:", e);
-    return null;
-  }
-}
-
-// 여러 응답 결과에서 각 키의 최빈값(합의) 도출
-function computeConsensus(results) {
-  const keys = [
-    "species",
-    "size",
-    "weight",
-    "is_predator",
-    "is_allowed_in_public",
-  ];
-  return keys.reduce((acc, key) => {
-    const freq = results.reduce((count, res) => {
-      if (res && res[key] !== undefined)
-        count[res[key]] = (count[res[key]] || 0) + 1;
-      return count;
-    }, {});
-    acc[key] = Object.keys(freq).reduce(
-      (maxKey, curKey) =>
-        freq[curKey] > (freq[maxKey] || 0) ? curKey : maxKey,
-      null
-    );
-    return acc;
-  }, {});
-}
-
-// -------------------- DOM 및 이벤트 처리 --------------------
-document.addEventListener("DOMContentLoaded", () => {
-  const imageInput = document.getElementById("imageInput");
-  const previewImg = document.getElementById("preview");
-  const submitBtn = document.getElementById("submitBtn");
-  const resultDiv = document.getElementById("gemini-result");
-
-  // 이미지 선택 시 미리보기 업데이트
-  imageInput.addEventListener("change", (e) => {
-    const file = e.target.files[0];
-    if (file) previewImg.src = URL.createObjectURL(file);
-  });
-
-  submitBtn.addEventListener("click", async () => {
-    if (!imageInput.files?.length) {
-      alert("이미지를 선택해주세요.");
-      return;
-    }
-    const file = imageInput.files[0];
-    resultDiv.innerText = "이미지 업로드 중입니다...";
-
-    try {
-      // 1. 이미지 업로드 (폴더: uploads)
-      const imageUrl = await uploadImageToSupabase(file, "uploads");
-      console.log("업로드된 이미지 URL:", imageUrl);
-      resultDiv.innerText = "이미지 업로드 완료!\nAPI 호출 중입니다...";
-
-      // 2. 메시지 구성 (토큰 최소화 버전)
-      const messages = createMessagePayload(imageUrl);
-
-      // 3. 각 API 요청 페이로드 (모델별 파라미터 조정)
-      const geminiPayload = {
-        messages,
-        max_tokens: 128,
-        temperature: 0.3,
-        top_p: 1,
-        top_k: 32,
-      };
-      const togetherPayload = {
-        model: "meta-llama/Llama-Vision-Free",
-        messages,
-        max_tokens: 128,
-        temperature: 0.3,
-        top_p: 1,
-        top_k: 32,
-        repetition_penalty: 1,
-        stop: ["<|eot|>", "<|eom_id|>"],
-        stream: false,
-      };
-      const groqPayload = {
-        model: "llama-3.2-90b-vision-preview",
-        messages,
-        max_tokens: 128,
-        temperature: 0.3,
-        stop: ["<|eot|>", "<|eom_id|>"],
-        stream: false,
-      };
-
-      // 4. API 동시 호출 (Gemini 재시도 포함)
-      const [geminiRes, togetherRes, groqRes] = await Promise.all([
-        callGeminiWithRetry(geminiPayload),
-        callApi(TOGETHER_API_ENDPOINT, togetherPayload, "Together"),
-        callApi(GROQ_API_ENDPOINT, groqPayload, "GROQ"),
-      ]);
-
-      // 5. 응답 파싱
-      const geminiData = Array.isArray(geminiRes)
-        ? geminiRes.map((r) => {
-            try {
-              return safeJSONParse(extractJSON(r.result));
-            } catch (e) {
-              console.warn("Gemini 파싱 실패:", r.result);
-              return null;
-            }
-          })
-        : [];
-      const togetherData = parseAPIResponse(togetherRes);
-      const groqData = parseAPIResponse(groqRes);
-
-      const allResults = [
-        ...geminiData.filter(Boolean),
-        togetherData,
-        groqData,
-      ].filter(Boolean);
-      const consensus = computeConsensus(allResults);
-
-      // 6. 결과 출력
-      resultDiv.innerHTML = `
-        <h3>각 API 응답</h3>
-        <pre>${JSON.stringify(
-          { gemini: geminiData, together: togetherData, groq: groqData },
-          null,
-          2
-        )}</pre>
-        <h3>최종 합의 결과</h3>
-        <pre>${JSON.stringify(consensus, null, 2)}</pre>
-      `;
-    } catch (error) {
-      console.error("에러 발생:", error);
-      resultDiv.innerText = "에러 발생: " + error.message;
-    }
-  });
-});
-
-// --- Helper: Supabase 이미지 업로드 ---
-async function uploadImageToSupabase(file) {
-  const fileName = `${Date.now()}_${file.name}`;
-  const { error } = await supabaseClient.storage
-    .from(SUPABASE_BUCKET)
-    .upload(fileName, file);
-  if (error) throw error;
-  const { data, error: urlError } = supabaseClient.storage
-    .from(SUPABASE_BUCKET)
-    .getPublicUrl(fileName);
-  if (urlError) throw urlError;
-  return data.publicUrl;
-}
-
-// --- Gemini API 호출 (서버 프록시) ---
-async function callGeminiModels(payload) {
-  try {
-    const res = await fetch(GEMINI_API_ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    if (!res.ok) {
-      console.warn(`Gemini API 요청 실패: ${res.status}`);
-      return null;
-    }
-    return res.json();
-  } catch (error) {
-    console.error(`Gemini API 호출 중 오류 발생: ${error.message}`);
-    return null;
-  }
-}
-
-async function callGeminiModelsWithGlobalRetry(
-  payload,
-  retries = 3,
-  delay = 3000
-) {
-  const result = await callGeminiModels(payload);
-  if (result) return result;
-  if (retries > 0) {
-    console.warn(
-      `Gemini 응답 없음. ${delay}ms 후 재시도... (남은 재시도: ${retries})`
-    );
-    await new Promise((res) => setTimeout(res, delay));
-    return callGeminiModelsWithGlobalRetry(payload, retries - 1, delay * 2);
-  }
-  return null;
-}
+document
+  .getElementById("fetchButton")
+  .addEventListener("click", fetchAllDetails);

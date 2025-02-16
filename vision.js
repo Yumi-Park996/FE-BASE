@@ -1,131 +1,58 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  const GEMINI_API_KEY = "AIzaSyAL8HHG1ZR89oRwTL86wifc6Hsv49O7JV4";
-
-  // TEST1 ) gemini-1.5-flash
-  // ✅ 이미지를 분석하여 반려동물 정보를 반환하는 함수
   async function findAnimal(base64Image, mimeType) {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-
-    const prompt = `You are the best animal behavior analyst and image recognition expert. The following image contains a pet. Analyze the image thoroughly and provide the most satisfying and detailed answer for the user. Identify the animal's species, breed, color, size, weight, temperament, and any unique characteristics. Focus on key traits typically associated with pets and ensure a high-quality response that meets user expectations.`;
+    const url = "https://victorious-cubic-marionberry.glitch.me/findAnimal";
 
     try {
       const response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                { text: prompt },
-                {
-                  inline_data: {
-                    mime_type: mimeType, // ✅ 사용자가 업로드한 파일의 MIME 타입 자동 설정
-                    data: base64Image, // ✅ Base64 인코딩된 이미지 데이터
-                  },
-                },
-              ],
-            },
-          ],
-        }),
+        body: JSON.stringify({ base64Image, mimeType }),
       });
-
-      if (!response.ok) {
-        throw new Error(
-          `API 오류: ${response.status} - ${await response.text()}`
-        );
-      }
-
-      const result1 = await response.json();
-      console.log("🔹 Gemini API 응답:", result);
-
-      if (result1.candidates && result1.candidates.length > 0) {
-        return result1.candidates[0].content.parts[0].text;
-      } else {
-        return "🔴 분석 실패: API가 응답을 반환하지 않았습니다.";
-      }
+      const data = await response.text(); // ✅ JSON이 아니라 텍스트로 받음
+      console.log("✅ findAnimal 응답:", data);
+      return data;
     } catch (error) {
       console.error("🚨 Gemini API 요청 오류:", error);
       return "🔴 오류 발생: API 요청 실패";
     }
   }
 
-  // TEST2 ) gemini-2.0-flash
-  // ✅ 이미지를 분석하여 반려동물 정보를 반환하는 함수
   async function findAnimal2(base64Image, mimeType, firstprompt) {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
-
-    const prompt = `You are the best animal behavior analyst and image recognition expert. The image provided is of a pet. Your task is to analyze the image and generate the most detailed and satisfying response for the user. Identify and describe the animal's type, breed, color, size, weight, temperament, and any distinctive characteristics. Additionally, you will be provided with a text ${firstprompt} that contains an analysis from another model. Your job is to refine, correct, and enhance 'text1' by incorporating your own analysis and insights from the image. Your final response must be a boosted and optimized version that delivers the highest quality answer to the user.`;
+    const url = "https://victorious-cubic-marionberry.glitch.me/findAnimal2";
 
     try {
       const response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                { text: prompt },
-                {
-                  inline_data: {
-                    mime_type: mimeType, // ✅ 사용자가 업로드한 파일의 MIME 타입 자동 설정
-                    data: base64Image, // ✅ Base64 인코딩된 이미지 데이터
-                  },
-                },
-              ],
-            },
-          ],
-        }),
+        body: JSON.stringify({ base64Image, mimeType, firstprompt }),
       });
-
-      if (!response.ok) {
-        throw new Error(
-          `API 오류: ${response.status} - ${await response.text()}`
-        );
-      }
-
-      const result2 = await response.json();
-      console.log("🔹 Gemini API 응답:", result);
-
-      if (result2.candidates && result2.candidates.length > 0) {
-        return result2.candidates[0].content.parts[0].text;
-      } else {
-        return "🔴 분석 실패: API가 응답을 반환하지 않았습니다.";
-      }
+      const data = await response.text(); // ✅ JSON이 아니라 텍스트로 받음
+      console.log("✅ findAnimal2 응답:", data);
+      return data;
     } catch (error) {
-      console.error("🚨 Gemini API 요청 오류:", error);
+      console.error("🚨 Gemini API 2 요청 오류:", error);
       return "🔴 오류 발생: API 요청 실패";
     }
   }
 
-  // TEST3 ) gemini-2.0-flash thinking
-  // ✅ 이미지를 분석하여 반려동물 정보를 반환하는 함수
   async function findAnimal3(base64Image, mimeType, secondprompt) {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-thinking-exp-01-21:generateContent?key=${GEMINI_API_KEY}`;
-    // 객체를 받아와서
+    const url = "https://victorious-cubic-marionberry.glitch.me/findAnimal3";
 
-    const prompt = `${secondprompt} is a prompt generated by boosting two models to analyze a pet image. You are the final model in the sequence, possessing superior analytical capabilities compared to the previous two models. The previous sentence should be remembered as context but should not be included in the output.
-
-Utilize '${secondprompt}' and the given pet image to analyze and provide the most detailed and satisfying response for the user. Identify and describe key characteristics of the pet, including species, breed, color, size, weight, temperament, and any unique traits associated with pets.
-
-Ensure that the response is presented in a friendly and engaging tone to enhance user satisfaction. Incorporate emojis to make the response more visually appealing. Additionally, use <br> and \n for line breaks instead of plain text formatting to improve readability. The output should be formatted in HTML instead of Markdown.
-
-The response must be written in Korean and should not exceed 2000 characters.`;
-
-    const choose = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-      }),
-    });
-
-    const result3 = await choose.json();
-    const finalText = result3.candidates[0].content.parts[0].text;
-    console.log(`분석 결과: ${finalText}`);
-    return finalText;
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ base64Image, mimeType, secondprompt }),
+      });
+      const data = await response.text(); // ✅ JSON이 아니라 텍스트로 받음
+      console.log("✅ findAnimal3 응답:", data);
+      return data;
+    } catch (error) {
+      console.error("🚨 Gemini API 3 요청 오류:", error);
+      return "🔴 오류 발생: API 요청 실패";
+    }
   }
 
-  // ✅ 버튼을 눌렀을 때 실행되는 이벤트 핸들러
   const form = document.querySelector("#controller");
   const formContainer = document.querySelector("#formContainer");
   const spinnerContainer = document.querySelector("#spinnerContainer");
@@ -135,7 +62,7 @@ The response must be written in Korean and should not exceed 2000 characters.`;
     event.preventDefault();
 
     console.log("폼 제출");
-    // ✅ UI 초기화
+
     const imgBox = document.querySelector("#showImg");
     const content = document.querySelector("#result1");
     const name = document.querySelector("#petName").value;
@@ -144,53 +71,64 @@ The response must be written in Korean and should not exceed 2000 characters.`;
 
     const input = document.querySelector("#imageInput");
 
-    formContainer.style.display = "none"; // 🔥 폼 숨김
-    spinnerContainer.style.display = "block"; // 🔥 스피너 표시
+    formContainer.style.display = "none";
+    spinnerContainer.style.display = "block";
 
     if (input.files && input.files[0]) {
       const file = input.files[0];
-      const mimeType = file.type; // ✅ 파일의 MIME 타입 자동 감지
-      console.log(`🟢 선택한 파일 MIME 타입: ${mimeType}`);
 
-      const reader = new FileReader();
+      try {
+        console.log("🟢 이미지 업로드 중...");
+        const formData = new FormData();
+        formData.append("image", file);
 
-      reader.onloadend = async () => {
-        const base64Image = reader.result.split(",")[1]; // ✅ "data:image/jpeg;base64,..."에서 Base64 부분만 추출
+        const uploadResponse = await fetch(
+          "https://victorious-cubic-marionberry.glitch.me/upload",
+          { method: "POST", body: formData }
+        );
 
-        try {
-          console.log("🔄 이미지 분석 중...");
-          const finalAnswer = await findAnimal(base64Image, mimeType);
-          const finalAnswer2 = await findAnimal2(
-            base64Image,
-            mimeType,
-            finalAnswer
-          );
-          const finalAnswer3 = await findAnimal3(
-            base64Image,
-            mimeType,
-            finalAnswer2
-          );
-
-          console.log(finalAnswer);
-          console.log(finalAnswer2);
-          const result3 = document.createElement("p");
-
-          spinnerContainer.style.display = "none";
-          resultContainer.style.display = "block";
-          imgBox.src = reader.result;
-
-          result3.innerHTML = `📌 ${name} 분석 결과 : ${finalAnswer3}`;
-          content.appendChild(result3);
-        } catch (error) {
-          console.error("🚨 오류 발생:", error);
-          content.innerText =
-            "이미지를 분석할 수 없습니다. 다른 이미지를 골라주세요";
-          spinnerContainer.style.display = "none";
-          formContainer.style.display = "block";
+        if (!uploadResponse.ok) {
+          throw new Error("이미지 업로드 실패");
         }
-      };
 
-      reader.readAsDataURL(file);
+        const { base64Image, mimeType } = await uploadResponse.json();
+        console.log("✅ 서버에서 변환된 Base64 데이터 수신 완료!");
+
+        console.log("🔄 findAnimal 실행 중...");
+        const finalAnswer = await findAnimal(base64Image, mimeType);
+        console.log("✅ findAnimal 응답:", finalAnswer);
+
+        console.log("🔄 findAnimal2 실행 중...");
+        const finalAnswer2 = await findAnimal2(
+          base64Image,
+          mimeType,
+          finalAnswer
+        );
+        console.log("✅ findAnimal2 응답:", finalAnswer2);
+
+        console.log("🔄 findAnimal3 실행 중...");
+        const finalAnswer3 = await findAnimal3(
+          base64Image,
+          mimeType,
+          finalAnswer2
+        );
+        console.log("✅ findAnimal3 응답:", finalAnswer3);
+
+        const result3 = document.createElement("p");
+
+        spinnerContainer.style.display = "none";
+        resultContainer.style.display = "block";
+        imgBox.src = URL.createObjectURL(file);
+
+        result3.innerHTML = `📌 ${name} 분석 결과 : ${finalAnswer3}`;
+        content.appendChild(result3);
+      } catch (error) {
+        console.error("🚨 오류 발생:", error);
+        content.innerText =
+          "이미지를 분석할 수 없습니다. 다른 이미지를 골라주세요";
+        spinnerContainer.style.display = "none";
+        formContainer.style.display = "block";
+      }
     } else {
       alert("🚨 이미지 파일을 선택해주세요.");
       content.innerText =
