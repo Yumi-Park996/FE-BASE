@@ -50,7 +50,7 @@ async function signInWithProvider(provider) {
   console.log(`🔹 기존 세션 초기화 중...`);
   await supabase.auth.signOut(); // ✅ 기존 세션 삭제 후 로그인 진행
   console.log(window.location.origin);
-  const redirectUrl = window.location.origin + "/animal-trip/index.html"; // ✅ 로그인 후 돌아올 경로 //####
+  const redirectUrl = window.location.origin + "/animal-trip/index.html"; // ✅ 로그인 후 돌아올 경로
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: provider,
