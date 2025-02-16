@@ -65,50 +65,69 @@
                 <div class="card-body">
                   <h3 class="text-center mb-4">사진 및 텍스트 입력</h3>
 
-                  <form>
+                  <form id="uploadForm">
                     <!-- 이미지 업로드 -->
                     <div class="mb-3">
-                      <label for="imageUpload" class="form-label"
+                      <label for="imageInput" class="form-label"
                         >반려동물 사진</label
                       >
                       <input
                         type="file"
                         class="form-control"
-                        id="imageUpload"
+                        id="imageInput"
                         accept="image/*"
                       />
                     </div>
 
-                    <!-- 입력 필드 1 -->
-                    <div class="mb-3">
-                      <label for="text1" class="form-label"
+                    <!-- 이미지 미리보기 -->
+                    <div class="mb-3 text-center">
+                      <img
+                        id="preview"
+                        src=""
+                        alt="선택한 이미지 미리보기"
+                        class="img-fluid rounded shadow"
+                        style="max-width: 100%; display: none"
+                      />
+                    </div>
+
+                    <!-- 반려동물 이름 입력 -->
+                    <!-- <div class="mb-3">
+                      <label for="petName" class="form-label"
                         >반려동물 이름</label
                       >
                       <input
                         type="text"
                         class="form-control"
-                        id="text1"
-                        placeholder="제목을 입력하세요"
+                        id="petName"
+                        placeholder="이름을 입력하세요"
                       />
-                    </div>
+                    </div> -->
+
                     <!-- 제출 버튼 -->
                     <div class="d-grid">
-                      <button type="submit" class="btn btn-primary">
-                        제출하기
+                      <button
+                        type="button"
+                        class="btn btn-primary"
+                        id="submitBtn"
+                      >
+                        API Model Chaining
                       </button>
                     </div>
                   </form>
                 </div>
               </div>
+              <h1>결과 페이지</h1>
+              <div id="gemini-result" class="result"></div>
             </div>
           </div>
         </div>
       </section>
     </section>
+
     <!-- nav bar - js -->
     <div id="footer"></div>
-    <script src="./script.js" defer></script>
-    <script src="./vision.js" defer></script>
+    <script src="./script.js"></script>
+    <script src="./vision.js"></script>
     <script src="./main.js"></script>
     <script src="./post.js"></script>
 
