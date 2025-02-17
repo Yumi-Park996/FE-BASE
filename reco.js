@@ -1,12 +1,12 @@
 const TOUR_TYPE = {
-  12: "관광지",
-  14: "문화시설",
-  15: "축제공연행사",
-  25: "여행코스",
-  28: "레포츠",
-  32: "숙박",
-  38: "쇼핑",
-  39: "음식점",
+  12: '관광지',
+  14: '문화시설',
+  15: '축제공연행사',
+  25: '여행코스',
+  28: '레포츠',
+  32: '숙박',
+  38: '쇼핑',
+  39: '음식점',
 };
 
 var map;
@@ -15,7 +15,7 @@ var geocoder;
 var infowindow;
 
 function loadKaKaoMap(x = 37.566842224638414, y = 126.97865225753738) {
-  var mapContainer = document.getElementById("map"), // 지도를 표시할 div
+  var mapContainer = document.getElementById('map'), // 지도를 표시할 div
     mapOption = {
       center: new kakao.maps.LatLng(x, y), // 지도의 중심좌표
       level: 3, // 지도의 확대 레벨
@@ -35,7 +35,7 @@ function loadKaKaoMap(x = 37.566842224638414, y = 126.97865225753738) {
 
   // 지도에 클릭 이벤트를 등록합니다
   // 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
-  kakao.maps.event.addListener(map, "click", clickEvent);
+  kakao.maps.event.addListener(map, 'click', clickEvent);
 }
 
 function moveMap(keyword) {
@@ -56,7 +56,7 @@ function moveMap(keyword) {
         loadKaKaoMap(data[0].y, data[0].x);
       }
     } else {
-      console.log("검색 실패:", status);
+      console.log('검색 실패:', status);
     }
   });
 }
@@ -69,17 +69,10 @@ function searchDetailAddrFromCoords(coords, callback) {
 function clickEvent(mouseEvent) {
   searchDetailAddrFromCoords(mouseEvent.latLng, function (result, status) {
     if (status === kakao.maps.services.Status.OK) {
-      var detailAddr = !!result[0].road_address
-        ? "<div>도로명주소 : " + result[0].road_address.address_name + "</div>"
-        : "";
-      detailAddr +=
-        "<div>지번 주소 : " + result[0].address.address_name + "</div>";
+      var detailAddr = !!result[0].road_address ? '<div>도로명주소 : ' + result[0].road_address.address_name + '</div>' : '';
+      detailAddr += '<div>지번 주소 : ' + result[0].address.address_name + '</div>';
 
-      var content =
-        '<div class="bAddr">' +
-        '<span class="infoWindow">법정동 주소정보</span>' +
-        detailAddr +
-        "</div>";
+      var content = '<div class="bAddr">' + '<span class="infoWindow">법정동 주소정보</span>' + detailAddr + '</div>';
 
       // 마커를 클릭한 위치에 표시합니다
       var latlng = mouseEvent.latLng;
@@ -98,15 +91,15 @@ function clickEvent(mouseEvent) {
 
       var message = result[0].address.address_name;
 
-      var resultDiv = document.getElementById("locationInput");
+      var resultDiv = document.getElementById('locationInput');
       resultDiv.value = message;
     }
   });
 }
 
-document.getElementById("searchButton").addEventListener("click", function () {
+document.getElementById('searchButton').addEventListener('click', function () {
   // 입력된 키워드 가져오기
-  var keyword = document.getElementById("keywordInput").value;
+  var keyword = document.getElementById('keywordInput').value;
   // moveMap 함수 실행
   moveMap(keyword);
 });
@@ -114,69 +107,58 @@ document.getElementById("searchButton").addEventListener("click", function () {
 loadKaKaoMap();
 
 // 모달이 열릴 때 지도 초기화
-document
-  .getElementById("mapModal")
-  .addEventListener("shown.bs.modal", function () {
-    map.relayout();
-  });
+document.getElementById('mapModal').addEventListener('shown.bs.modal', function () {
+  map.relayout();
+});
 
 // "선택 완료" 버튼 클릭 시 맵 모달 Hide
-document
-  .getElementById("confirmLocation")
-  .addEventListener("click", function () {
-    const modal = bootstrap.Modal.getInstance(
-      document.getElementById("mapModal")
-    );
-    modal.hide();
-    // 포커스를 모달을 열었던 버튼으로 이동
-    document.querySelector('[data-bs-target="#mapModal"]').focus();
-  });
+document.getElementById('confirmLocation').addEventListener('click', function () {
+  const modal = bootstrap.Modal.getInstance(document.getElementById('mapModal'));
+  modal.hide();
+  // 포커스를 모달을 열었던 버튼으로 이동
+  document.querySelector('[data-bs-target="#mapModal"]').focus();
+});
 
 // 선택창 입력 받기
 function updateDropdownText(menuId, buttonId, isTourType) {
-  document
-    .querySelectorAll(`#${menuId} input[type="radio"]`)
-    .forEach((input) => {
-      input.addEventListener("change", function () {
-        console.log(this.value);
-        let selected = this.value;
-        if (isTourType) selected = TOUR_TYPE[selected];
-        document.getElementById(buttonId).textContent = selected;
-      });
+  document.querySelectorAll(`#${menuId} input[type="radio"]`).forEach(input => {
+    input.addEventListener('change', function () {
+      console.log(this.value);
+      let selected = this.value;
+      if (isTourType) selected = TOUR_TYPE[selected];
+      document.getElementById(buttonId).textContent = selected;
     });
+  });
 }
 
-updateDropdownText("petSizeMenu", "petSizeBtn", false);
-updateDropdownText("isPredatorMenu", "isPredatorBtn", false);
-updateDropdownText("publicAccessMenu", "publicAccessBtn", false);
-updateDropdownText("tourTypeMenu", "tourTypeBtn", true);
+updateDropdownText('petSizeMenu', 'petSizeBtn', false);
+updateDropdownText('isPredatorMenu', 'isPredatorBtn', false);
+updateDropdownText('publicAccessMenu', 'publicAccessBtn', false);
+updateDropdownText('tourTypeMenu', 'tourTypeBtn', true);
 
 //폼 제출 이벤트
-document.getElementById("petForm").addEventListener("submit", function (event) {
+document.getElementById('petForm').addEventListener('submit', function (event) {
   event.preventDefault();
-  const styleForm = document.querySelector("#sect-bd");
-  const name = document.getElementById("petName").value;
-  const species = document.getElementById("petSpecies").value;
-  const petSize =
-    document.getElementById("petSizeBtn").textContent !== "선택"
-      ? document.getElementById("petSizeBtn").textContent
-      : "선택 안 함";
-  const isPredator =
-    document.getElementById("isPredatorBtn").textContent !== "선택"
-      ? document.getElementById("isPredatorBtn").textContent
-      : "선택 안 함";
-  const publicAccess =
-    document.getElementById("publicAccessBtn").textContent !== "선택"
-      ? document.getElementById("publicAccessBtn").textContent
-      : "선택 안 함";
-  const tourType =
-    document.getElementById("tourTypeBtn").textContent !== "선택"
-      ? document.getElementById("tourTypeBtn").textContent
-      : "선택 안 함";
-  const location =
-    document.getElementById("locationInput").value || "선택 안 함";
-  styleForm.style.display = "none";
-  document.getElementById("result").innerHTML = `
+
+  // 로딩 스피너 활성화
+  document.getElementById('spinner').innerHTML = `
+  <div id="loadingSpinner" class="loading-spinner">
+  <div class="spinner-border text-warning" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  <p class="loading-text">입력한 정보를 분석 중...</p>
+  </div>`;
+
+  const styleForm = document.querySelector('#sect-bd');
+  const name = document.getElementById('petName').value;
+  const species = document.getElementById('petSpecies').value;
+  const petSize = document.getElementById('petSizeBtn').textContent !== '선택' ? document.getElementById('petSizeBtn').textContent : '선택 안 함';
+  const isPredator = document.getElementById('isPredatorBtn').textContent !== '선택' ? document.getElementById('isPredatorBtn').textContent : '선택 안 함';
+  const publicAccess = document.getElementById('publicAccessBtn').textContent !== '선택' ? document.getElementById('publicAccessBtn').textContent : '선택 안 함';
+  const tourType = document.getElementById('tourTypeBtn').textContent !== '선택' ? document.getElementById('tourTypeBtn').textContent : '선택 안 함';
+  const location = document.getElementById('locationInput').value || '선택 안 함';
+  styleForm.style.display = 'none';
+  document.getElementById('result').innerHTML = `
       <h4>🐶입력한 정보😽</h4>
       <p><strong>이름:</strong> ${name}</p>
       <p><strong>종:</strong> ${species}</p>
