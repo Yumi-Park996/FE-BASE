@@ -151,13 +151,13 @@ h4 {
 .info-card {
   background: white;
   padding: 20px;
-  border-radius: 12px;
+  border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 90%;
   max-width: 800px;
   margin: 20px auto;
   text-align: center;
-  font-family: 'Arial', sans-serif;
+  font-family: 'HakgyoansimDunggeunmisoTTF-B'
 }
 
 /* 이름 */
@@ -172,6 +172,7 @@ h4 {
   color: #666;
   font-size: 0.9em;
   margin-bottom: 15px;
+  font-family: "Pretendard-Regular";
 }
 
 /* 이미지 */
@@ -188,6 +189,7 @@ h4 {
   line-height: 2;
   color: #444;
   text-align: center;
+  font-family: "Pretendard-Regular";
 }
 
 /* 운영시간 & 전화번호 */
@@ -201,3 +203,4 @@ h4 {
 .info-phone strong {
   color: #ffc107;
 }
+
