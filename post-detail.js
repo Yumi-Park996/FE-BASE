@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const postId = urlParams.get("id");
+  const goBackButton = document.getElementById("goBackBtn");
 
   if (!postId) {
     alert("게시글을 찾을 수 없습니다.");
@@ -8,6 +9,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
+  goBackButton.addEventListener("click", function () {
+    const basePath = window.location.pathname.split("/").slice(0, -1).join("/");
+    window.location.href = `${basePath}/community.html`;
+  });
   await loadPostDetail(postId);
 });
 

@@ -48,6 +48,12 @@ async function loadPosts() {
   const posts = await response.json();
 
   postList.innerHTML = ""; // 기존 게시글 초기화
+  const isLoggedIn = await checkLoginStatus();
+
+  if (!isLoggedIn) {
+    console.log("🛑 로그인하지 않은 사용자");
+  }
+
   posts.forEach((post) => createPostElement(post));
 }
 
@@ -84,6 +90,18 @@ async function uploadImageToSupabase(file) {
     throw error;
   }
 }
+
+// ===============여기추가================= //
+// 현재 로그인한 사용자의 user_id 가져오기
+// ✅ 로그인 여부를 확인하는 새로운 함수 (로그인 안 되어도 오류 없이 진행)
+async function getCurrentUserId() {
+  const { data: sessionData, error } = await supabase.auth.getSession();
+  if (error || !sessionData?.session) {
+    return null; // 로그인하지 않은 경우 null 반환 (경고창 없음)
+  }
+  return sessionData.session.user.id;
+}
+//===================================//
 
 // 📌 게시글 저장 (이미지 base64 변환 후 Supabase DB 저장)
 async function savePost(title, content, imageFile) {
@@ -215,11 +233,22 @@ async function deleteImage(postId) {
 
 // 📌 서버에서 게시글 삭제하기
 async function deletePost(postId) {
-  const user_id = await checkAuth(); // ✅ 로그인 체크 추가
+  // === 추가 ===
+  const user_id = await getCurrentUserId(); // ✅ 현재 로그인한 사용자 ID 가져오기
+  // ==
   if (!user_id) return; // ✅ 로그인되지 않으면 함수 종료
 
   const confirmDelete = confirm("정말로 삭제하시겠습니까?");
   if (!confirmDelete) return;
+
+  // ✅ 로그인 토큰 가져오기 추가=============
+  const { data: sessionData, error } = await supabase.auth.getSession();
+  if (error || !sessionData?.session) {
+    alert("로그인이 필요합니다!");
+    return;
+  }
+  const access_token = sessionData.session.access_token;
+  //========================================
 
   // ✅ 게시글에 연결된 이미지 확인
   const postElement = document.getElementById(`current-image-${postId}`);
@@ -238,9 +267,14 @@ async function deletePost(postId) {
 
   const response = await fetch(`${API_URL}/posts/${postId}`, {
     method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${access_token}`, // ✅ 로그인한 사용자 인증 추가
+    },
   });
 
   if (response.ok) {
+    alert("게시글 삭제 완료");
     loadPosts();
   } else {
     alert("게시글 삭제 실패!");
@@ -318,8 +352,12 @@ postForm.addEventListener("submit", async function (event) {
   window.location.href = "./community.html";
 });
 
+//===========여기 추가=========//
+function goToEditPage(postId) {
+  window.location.href = `edit.html?id=${postId}`;
+}
 // 📌 게시글을 동적으로 생성하는 함수 (개선된 디자인 적용)
-function createPostElement(post) {
+async function createPostElement(post) {
   const postDiv = document.createElement("div");
   const spinner = document.querySelector("#spinnerContainer");
   postDiv.classList.add("col-md-4", "mb-4"); // 🔹 3개씩 배치 (Bootstrap Grid 활용)
@@ -343,6 +381,21 @@ function createPostElement(post) {
     ? `<img src="${post.image_url}" class="card-img-top" alt="게시물 이미지">`
     : "";
 
+  // ✅ 새로 만든 getCurrentUserId() 사용 (로그인 안 해도 오류 안 나도록)
+  const currentUserId = await getCurrentUserId();
+
+  let editButton = "";
+  if (currentUserId && post.user_id && currentUserId === post.user_id) {
+    editButton = `<button class="btn btn-sm btn-outline-primary edit-btn" onclick="goToEditPage('${post.id}')">✏ 수정</button>`;
+  }
+
+  // 🛑 삭제 버튼: 현재 로그인한 사용자와 게시글 작성자가 같은 경우에만 표시
+  let deleteButton = "";
+  if (currentUserId && post.user_id && currentUserId === post.user_id) {
+    deleteButton = `<button class="btn btn-sm btn-outline-danger delete-btn" onclick="deletePost('${post.id}')">🗑 삭제</button>`;
+  }
+
+  // ========삭제============//
   postDiv.innerHTML = `
         <div class="card shadow-sm">
             <!-- 기존 게시글 내용 (보기 모드) -->
@@ -361,43 +414,8 @@ function createPostElement(post) {
                     </div>
                 </a>
                 <div class="d-flex justify-content-between mt-3 p-2">
-                    <button class="btn btn-sm btn-outline-primary edit-btn" data-post-id="${
-                      post.id
-                    }" onclick="enableEditMode('${post.id}')">✏ 수정</button>
-                    <button class="btn btn-sm btn-outline-danger delete-btn" data-post-id="${
-                      post.id
-                    }" onclick="deletePost('${post.id}')">🗑 삭제</button>
-                </div>
-            </div>
-
-            <!-- 게시글 수정 모드 -->
-            <div id="edit-mode-${
-              post.id
-            }" class="edit-post card-body p-3" style="display: none;">
-                <input type="text" id="edit-title-${
-                  post.id
-                }" class="form-control mb-2" value="${post.title}">
-                <textarea id="edit-content-${
-                  post.id
-                }" class="form-control mb-2" rows="4">${post.content}</textarea>
-
-                <!-- 기존 이미지 표시 -->
-                <div class="mb-2">
-                    ${imageTag}
-                </div>
-
-                <!-- 이미지 업로드 -->
-                <input type="file" id="edit-image-${
-                  post.id
-                }" class="form-control mb-2">
-                
-                <div class="d-flex justify-content-between">
-                    <button class="btn btn-success" onclick="updatePost('${
-                      post.id
-                    }')">💾 저장</button>
-                    <button class="btn btn-secondary" onclick="disableEditMode('${
-                      post.id
-                    }')">❌ 취소</button>
+                    ${editButton}
+                    ${deleteButton}
                 </div>
             </div>
         </div>

@@ -54,30 +54,83 @@
   <body>
     <!-- nav bar - js -->
     <div id="navbar"></div>
-    <div class="mainContainer">
-      <div
-        id="spinnerContainer"
-        class="text-center mt-3"
-        style="display: block"
-      >
-        <div class="spinner-border text-success" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div>
-      </div>
-      <div class="container mt-4">
-        <div id="postDetail"></div>
-        <button id="goBackBtn" class="btn btn-secondary mt-3">
-          ⬅ 돌아가기
-        </button>
+    <div class="container mt-5">
+      <div class="card shadow-lg p-4">
+        <h2 class="text-center mb-4">게시글 수정</h2>
+        <form id="editPostForm">
+          <div class="mb-3">
+            <label for="editTitle" class="form-label fw-bold">제목</label>
+            <input
+              type="text"
+              id="editTitle"
+              class="form-control"
+              placeholder="제목을 입력하세요"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="editContent" class="form-label fw-bold">내용</label>
+            <textarea
+              id="editContent"
+              class="form-control"
+              rows="5"
+              placeholder="내용을 입력하세요"
+              required
+            ></textarea>
+          </div>
+
+          <!-- 기존 이미지 표시 -->
+          <div class="mb-3 text-center">
+            <img
+              id="currentImage"
+              src=""
+              alt="현재 이미지"
+              class="img-fluid rounded shadow-sm"
+              style="display: none"
+            />
+            <button
+              type="button"
+              id="deleteImageBtn"
+              class="btn btn-warning mt-2"
+              style="display: none"
+            >
+              🗑 이미지 삭제
+            </button>
+          </div>
+
+          <!-- 새 이미지 업로드 -->
+          <div class="mb-3">
+            <label for="newImage" class="form-label fw-bold"
+              >새로운 이미지 업로드</label
+            >
+            <input
+              type="file"
+              id="newImage"
+              class="form-control"
+              accept="image/*"
+            />
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <button type="submit" class="btn btn-success w-45">💾 저장</button>
+            <button
+              type="button"
+              class="btn btn-secondary w-45"
+              onclick="cancelEdit()"
+            >
+              ❌ 취소
+            </button>
+          </div>
+        </form>
       </div>
     </div>
-
     <!-- nav bar - js -->
     <div id="footer"></div>
     <!-- <script src="./community.js" defer></script> -->
     <script src="./main.js"></script>
     <script src="./post.js"></script>
-    <script src="./post-detail.js"></script>
+    <script src="./edit.js"></script>
 
     <!-- Bootstrap JS (Optional, for features like dropdowns) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
