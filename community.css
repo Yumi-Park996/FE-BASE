@@ -31,9 +31,9 @@
 .form-container button {
   background-color: #a3520f;
   border: none;
-  
-}.form-container button:hover {
-    background-color: #eb7719;
+}
+.form-container button:hover {
+  background-color: #eb7719;
 }
 .post-card {
   background: white;
@@ -96,6 +96,36 @@
   font-size: 0.8rem;
 }
 
+.comment-box {
+  background: #f8f9fa; /* 연한 배경 */
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 10px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.comment-box p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.comment-box small {
+  color: #6c757d;
+  display: block;
+  margin-top: 5px;
+}
+
+.comment-actions {
+  display: flex;
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.comment-actions button {
+  font-size: 12px;
+  padding: 5px 8px;
+}
+
 #spinnerContainer {
   flex: 1; /* 남은 공간을 차지하도록 설정 */
   display: flex;
@@ -134,4 +164,3 @@
 .navbar.navbar-expand-lg.navbar-light.bg-white.shadow-sm.container-fluid {
   font-family: "HakgyoansimDunggeunmisoTTF-B";
 }
-
