@@ -158,15 +158,17 @@ document.getElementById('petForm').addEventListener('submit', function (event) {
   const tourType = document.getElementById('tourTypeBtn').textContent !== '선택' ? document.getElementById('tourTypeBtn').textContent : '선택 안 함';
   const location = document.getElementById('locationInput').value || '선택 안 함';
   styleForm.style.display = 'none';
-  document.getElementById('result').innerHTML = `
-      <h4>🐶입력한 정보😽</h4>
-      <p><strong>이름:</strong> ${name}</p>
-      <p><strong>종:</strong> ${species}</p>
-      <p><strong>동물 크기:</strong> ${petSize}</p>
-      <p><strong>맹수 여부:</strong> ${isPredator}</p>
-      <p><strong>공공장소 동행 가능 여부:</strong> ${publicAccess}</p>
-      <p><strong>숙소 / 관광 타입:</strong> ${tourType}</p>
-      <p><strong>위치 정보:</strong> ${location}</p>
 
-  `;
+  const resultDiv = document.getElementById('result');
+  resultDiv.classList.add('info-card');
+  resultDiv.innerHTML = `
+    <h4>🐶입력한 정보😽</h4>
+    <p><strong>이름:</strong> ${name}</p>
+    <p><strong>종:</strong> ${species}</p>
+    <p><strong>동물 크기:</strong> ${petSize}</p>
+    <p><strong>맹수 여부:</strong> ${isPredator}</p>
+    <p><strong>공공장소 동행 가능 여부:</strong> ${publicAccess}</p>
+    <p><strong>숙소 / 관광 타입:</strong> ${tourType}</p>
+    <p><strong>위치 정보:</strong> ${location}</p>
+    `;
 });

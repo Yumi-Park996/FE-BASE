@@ -166,20 +166,25 @@ function displayInfo(infoList, data, tourValue) {
       const item = data[placeInfo.NUMBER]; // 번호에 맞는 숙소 정보
 
       const div = document.createElement('div');
+      div.classList.add('info-card');
       div.id = `${tourValue}-${index}`; // 인덱스를 기반으로 id 설정
 
       // 숙소 이름
       const title = document.createElement('h3');
+      title.classList.add('info-name');
       title.textContent = item.title;
       div.appendChild(title);
 
       // 숙소 주소
       const address = document.createElement('p');
-      address.textContent = `주소: ${item.addr1} ${item.addr2}`;
+      address.classList.add('info-address');
+      address.textContent = `📍 ${item.addr1} ${item.addr2}`;
       div.appendChild(address);
 
       // 숙소 이미지 (없으면 대체 이미지 설정)
       const image = document.createElement('img');
+      image.classList.add('info-image');
+
       if (item.firstimage) {
         image.src = item.firstimage;
       } else {
@@ -191,19 +196,22 @@ function displayInfo(infoList, data, tourValue) {
 
       // 주요특징
       const info = document.createElement('p');
-      info.textContent = `주요 특징: ${placeInfo.INFO && placeInfo.INFO.trim() ? placeInfo.INFO : '정보 없음'}`;
+      info.classList.add('info-description');
+      info.textContent = `🔍 ${placeInfo.INFO && placeInfo.INFO.trim() ? placeInfo.INFO : '정보 없음'}`;
 
       div.appendChild(info);
 
       // 운영시간
       const time = document.createElement('p');
-      time.textContent = `운영 시간: ${placeInfo.TIME && placeInfo.TIME.trim() ? placeInfo.TIME : '정보 없음'}`;
+      time.classList.add('info-hours');
+      time.textContent = `📅 ${placeInfo.TIME && placeInfo.TIME.trim() ? placeInfo.TIME : '정보 없음'}`;
 
       div.appendChild(time);
 
       // 전화번호
       const tel = document.createElement('p');
-      tel.textContent = `전화번호: ${item.tel && item.tel.trim() ? item.tel : '정보 없음'}`;
+      time.classList.add('info-phone');
+      tel.textContent = `📞  ${item.tel && item.tel.trim() ? item.tel : '정보 없음'}`;
 
       div.appendChild(tel);
 
