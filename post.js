@@ -281,57 +281,6 @@ async function deletePost(postId) {
   }
 }
 
-// 📌 댓글 추가하기
-async function addComment(board_id) {
-  const user_id = await checkAuth(); // ✅ 로그인 체크
-  if (!user_id) return; // ✅ 로그인되지 않으면 함수 종료
-
-  const commentInput = document.getElementById(`comment-input-${board_id}`);
-  const content = commentInput.value.trim();
-  if (!content) return;
-
-  const response = await fetch(`${API_URL}/comments`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ board_id, content }),
-  });
-
-  const responseData = await response.json();
-  console.log("📌 API 응답:", responseData); // ✅ API 응답 확인
-
-  if (response.ok) {
-    loadComments(board_id);
-  } else {
-    alert(`댓글 작성 실패! 오류: ${responseData.error}`);
-  }
-}
-
-// 📌 서버에서 댓글 수정하기
-async function updateComment(commentId, board_id) {
-  const user_id = await checkAuth(); // ✅ 로그인 체크 추가
-  if (!user_id) return; // ✅ 로그인되지 않으면 함수 종료
-  const contentInput = document.getElementById(`edit-comment-${commentId}`);
-
-  const newContent = contentInput.value.trim();
-  if (!newContent) return alert("댓글 내용을 입력하세요.");
-
-  await fetch(`${API_URL}/comments/${commentId}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ content: newContent }),
-  });
-
-  loadComments(board_id); // 수정 후 해당 게시글의 댓글 다시 불러오기
-}
-
-// 📌 댓글 삭제하기
-async function deleteComment(commentId, board_id) {
-  const user_id = await checkAuth(); // ✅ 로그인 체크 추가
-  if (!user_id) return; // ✅ 로그인되지 않으면 함수 종료
-  await fetch(`${API_URL}/comments/${commentId}`, { method: "DELETE" });
-  loadComments(board_id); // 다시 불러오기
-}
-
 // 📌 글 작성 이벤트 (이미지 업로드 추가)
 postForm.addEventListener("submit", async function (event) {
   event.preventDefault();
@@ -423,78 +372,6 @@ async function createPostElement(post) {
   spinner.style.display = "none";
   document.getElementById("postList").appendChild(postDiv);
   //loadComments(post.id); // 댓글 불러오기
-}
-
-// 📌 특정 게시글의 댓글 불러오기 (작성 & 수정 날짜 포함)
-async function loadComments(board_id) {
-  const response = await fetch(`${API_URL}/comments?board_id=${board_id}`);
-  const comments = await response.json();
-
-  const commentsDiv = document.getElementById(`comments-${board_id}`);
-  commentsDiv.innerHTML = ""; // 기존 댓글 초기화
-
-  comments.forEach((comment) => {
-    const createdDate = new Date(comment.created_at).toLocaleString("ko-KR", {
-      timeZone: "Asia/Seoul",
-    });
-    const updatedDate = comment.updated_at
-      ? new Date(comment.updated_at).toLocaleString("ko-KR", {
-          timeZone: "Asia/Seoul",
-        })
-      : null;
-    const isUpdated =
-      comment.updated_at && comment.updated_at !== comment.created_at;
-
-    let dateText = isUpdated
-      ? `<div class="comment-updated">✏ 수정: ${updatedDate}</div>`
-      : `<div class="comment-date">📅 작성: ${createdDate}</div>`;
-
-    const commentElement = document.createElement("div");
-    commentElement.classList.add("comment-box");
-    commentElement.innerHTML = `
-        <div id="view-comment-${comment.id}">
-            <p class="comment-content">${comment.content}</p>
-            ${dateText}
-            <div class="comment-actions">
-                <button class="btn btn-sm btn-outline-primary edit-comment-btn" data-comment-id="${comment.id}"  onclick="enableCommentEditMode('${comment.id}', '${comment.content}')">✏ 수정</button>
-                <button class="btn btn-sm btn-outline-danger delete-comment-btn" data-comment-id="${comment.id}" data-board-id="${board_id}" onclick="deleteComment('${comment.id}', '${board_id}')">🗑 삭제</button>
-            </div>
-        </div>
-  
-        <div id="edit-comment-mode-${comment.id}" style="display: none;">
-            <input type="text" id="edit-comment-${comment.id}" class="form-control comment-edit-input" value="${comment.content}">
-            <button class="btn btn-success save-comment-btn" data-comment-id="${comment.id}" data-board-id="${board_id}" onclick="updateComment('${comment.id}', '${board_id}')">💾 저장</button>
-            <button class="btn btn-secondary cancel-comment-btn" data-comment-id="${comment.id}" onclick="disableCommentEditMode('${comment.id}')">❌ 취소</button>
-        </div>
-      `;
-    commentsDiv.appendChild(commentElement);
-  });
-}
-
-// 📌 수정 모드 활성화
-function enableEditMode(postId) {
-  document.getElementById(`view-mode-${postId}`).style.display = "none";
-  document.getElementById(`edit-mode-${postId}`).style.display = "block";
-}
-
-// 📌 수정 모드 취소
-function disableEditMode(postId) {
-  document.getElementById(`view-mode-${postId}`).style.display = "block";
-  document.getElementById(`edit-mode-${postId}`).style.display = "none";
-}
-
-// 📌 댓글 수정 모드 활성화
-function enableCommentEditMode(commentId) {
-  document.getElementById(`view-comment-${commentId}`).style.display = "none";
-  document.getElementById(`edit-comment-mode-${commentId}`).style.display =
-    "block";
-}
-
-// 📌 댓글 수정 모드 취소
-function disableCommentEditMode(commentId) {
-  document.getElementById(`view-comment-${commentId}`).style.display = "block";
-  document.getElementById(`edit-comment-mode-${commentId}`).style.display =
-    "none";
 }
 
 // 📌 페이지 로드 시 게시글 불러오기

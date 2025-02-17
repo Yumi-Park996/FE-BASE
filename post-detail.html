@@ -54,7 +54,8 @@
   <body>
     <!-- nav bar - js -->
     <div id="navbar"></div>
-    <div class="mainContainer">
+    <div class="mainContainer container">
+      <button id="goBackBtn" class="btn btn-secondary mt-3">⬅ 돌아가기</button>
       <div
         id="spinnerContainer"
         class="text-center mt-3"
@@ -66,9 +67,23 @@
       </div>
       <div class="container mt-4">
         <div id="postDetail"></div>
-        <button id="goBackBtn" class="btn btn-secondary mt-3">
-          ⬅ 돌아가기
-        </button>
+      </div>
+
+      <div id="commentsSection" class="mt-4">
+        <h4>💬 댓글</h4>
+        <div id="commentsList"></div>
+
+        <!-- 댓글 입력 -->
+        <div id="commentInputContainer" class="mt-3">
+          <textarea
+            id="commentInput"
+            class="form-control"
+            placeholder="댓글을 입력하세요..."
+          ></textarea>
+          <button id="addCommentButton" class="btn btn-primary mt-2">
+            댓글 작성
+          </button>
+        </div>
       </div>
     </div>
 
