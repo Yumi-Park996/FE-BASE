@@ -67,6 +67,8 @@ async function fetchAllDetails() {
 
   // 만약에 data가 없다면 종료
   if (data.length === 0) {
+    // 로딩 스피너 비활성화
+    document.getElementById('spinner').innerHTML = '';
     console.log('주위의 정보 없음', data);
 
     const resultDiv = document.getElementById('result');
