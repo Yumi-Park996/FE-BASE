@@ -86,7 +86,7 @@
 
 body {
   /* background-image: url(/FE-BASE/FE-BASE/asset/bg-removebg-preview.png); */
-  background-image: url(/FE-BASE/FE-BASE/asset/right_bottom_smaller_image.png);
+  background-image: url(/FE-BASE/asset/right_bottom_smaller_image.png);
   background-repeat: no-repeat;
   background-position: right bottom;
   background-position: top center; /* 위아래 고정, 가운데 정렬 */
