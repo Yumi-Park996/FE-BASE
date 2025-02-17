@@ -54,9 +54,14 @@ async function fetchAllDetails() {
 
   // 장소 기본 정보
   if (!window.selectedLatlng?.lng || !window.selectedLatlng?.lat) {
-    // 하나라도 falsy한 값일 경우
-    alert('지도에 마커를 표시해 주세요!');
-    return;
+    // 객체가 없을 경우 먼저 생성
+    if (!window.selectedLatlng) {
+      window.selectedLatlng = {};
+    }
+
+    // 기본 위치 설정 (서울시청 좌표)
+    window.selectedLatlng.lng = 126.97865225753738;
+    window.selectedLatlng.lat = 37.566842224638414;
   }
   const data = await fetchBaseList(tourValue);
 
